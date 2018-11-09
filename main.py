@@ -65,14 +65,12 @@ def doInput():
             glutPostRedisplay()
         elif (command=='reset'):
             print("reset")
+        elif (command=='3D'):
+            render.is3D = True
         else:
-            pass
-            # listCommand = command.split(' ')
-            # parsingCommand(listCommand)
-            # if (listCommand[0]=='multiple'):
-            #     multiCommand = input("   ")
-            #     listCommand = multiCommand.split(' ')
-            #     parsingCommand(listCommand)
+            termInput.parsingCommand(command,listPoint)
+            listPoint = termInput.pointBuffer
+            glutPostRedisplay()
         taskQueue.task_done()
 
 def prepareDisplay():
