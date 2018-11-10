@@ -64,25 +64,33 @@ def refleksi(points,param):
 def shear(points,sb,param):
     penambah=np.zeros(3)
     if(sb=="x"):
-        pengali=np.array([[1,param,0]])
+        pengali=np.array([[1,param,param]])
         pengali=np.append(pengali,[[0,1,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
     elif(sb=="y"):
         pengali=np.array([[1,0,0]])
-        pengali=np.append(pengali,[[param,1,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
+        pengali=np.append(pengali,[[param,1,param]],axis=0)
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
+    elif(sb=='z'):
+        pengali=np.array([[1,0,0]])
+        pengali=np.append(pengali,[[0,1,0]],axis=0)
+        pengali=np.append(pengali,[[param,param,1]],axis=0)
     return transformasi(points,pengali,penambah)
 
 def stretch(points,sb,param):
     penambah=np.zeros(3)
     if(sb=="x"):
-        pengali=np.array([[1,0,0]])
-        pengali=np.append(pengali,[[0,param,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
-    elif(sb=="y"):
         pengali=np.array([[param,0,0]])
+        pengali=np.append(pengali,[[0,1,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
+    elif(sb=="y"):
+        pengali=np.array([[1,0,0]])
+        pengali=np.append(pengali,[[0,param,0]],axis=0)  
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
+    elif(sb=="y"):
+        pengali=np.array([[1,0,0]])
         pengali=np.append(pengali,[[0,1,0]],axis=0)  
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,param]],axis=0)
     return transformasi(points,pengali,penambah)
 
 def custom(points,array):
