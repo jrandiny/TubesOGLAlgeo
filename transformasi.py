@@ -10,13 +10,28 @@ def translasi(points,dx,dy,dz):
     return transformasi(points,pengali,penambah)
 
 
-def rotasi(points,degree,a,b,c):
-    penambah=np.array([-1*a,-1*b])
-    pengali=np.array([[math.cos(toRadian(degree)),-1*math.sin(toRadian(degree))]])
-    pengali=np.append(pengali,[[math.sin(toRadian(degree)),math.cos(toRadian(degree))]],axis=0)
-    hasil=transformasi(points,pengali,penambah)
-    hasil=translasi(hasil,-a,-b)
-    return hasil
+def rotasi(points,degree,a,b,c,is3D):
+    sudut=toRadian(degree)
+    if !is3D:
+        penambah=np.array([-1*a,-1*b])
+        pengali=np.array([[math.cos(sudut),-1*math.sin(sudut)]])
+        pengali=np.append(pengali,[[math.sin(sudut),math.cos(sudut)]],axis=0)
+        hasil=transformasi(points,pengali,penambah)
+        hasil=translasi(hasil,-a,-b)
+        return hasil
+    else:
+        penambah=np.zeros(3)
+        length=math.sqrt(math.pow(a,2)+math.pow(b,2)+math.pow(c,2))
+        a/=length
+        b/=length
+        c/=length
+        pengali=np.array([[math.pow(a,2)*(1-math.cos(sudut))+math.cos(sudut),a*b*(1-math.cos(sudut))-c*math.sin(sudut),a*c(1-math.cos(sudut))+b*math.sin(sudut)]])
+        pengali=np.append(pengali,[[a*b*(1-math.cos(sudut))+c*math.sin(sudut),math.pow(b,2)*(1-math.cos(sudut))+math.cos(sudut),b*c(1-math.cos(sudut))-a*math.sin(sudut)]],axis=0)
+        pengali=np.append(pengali,[[a*c*(1-math.cos(sudut))-b*math.sin(sudut),b*c(1-math.cos(sudut))+a*math.sin(sudut),math.pow(c,2)*(1-math.cos(sudut))+math.cos(sudut)]],axis=0)
+        return transformasi(points,pengali,penambah)
+        
+        
+        
 
 def refleksi(points,param):
     penambah=np.zeros((1,2))    
