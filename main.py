@@ -84,9 +84,11 @@ if __name__ =="__main__":
 
     #setup OGL window
     glutInit()
-    glutInitDisplayMode(GLUT_DOUBLE)
+    glutInitDisplayMode(GLUT_DOUBLE|GLUT_DEPTH)
     glutInitWindowSize(1000, 1000)
     glutCreateWindow("ini layar loh wkwkwkwk!!!")
+
+    glEnable(GL_DEPTH_TEST)
 
     inputThread.start()
 
