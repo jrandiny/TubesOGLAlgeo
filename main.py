@@ -18,7 +18,7 @@ import termInput
 taskQueue = Queue()
 pointQueue = Queue()
 
-listPoint = np.array([[-0.5,-0.5,-3],[0.5,-0.5,-3],[0.5,0.5,-3],[-0.5,0.5,-3]])
+listPoints =[np.array([[-0.5,-0.5,-3],[0.5,-0.5,-3],[0.5,0.5,-3],[-0.5,0.5,-3]])]
 
 def keyboardFunc(key,x,y):
     if key==b'Q':
@@ -36,32 +36,29 @@ def keyboardFunc(key,x,y):
             render.translate[1] = -0.5
         elif(key==b's'):
             render.translate[1] = 0.5
+        if(key == b'i'):
+            render.rotate[0] = 1.0
+            render.rotate[1] = 1.0
+        elif(key==b'k'):
+            render.rotate[0] = -1.0
+            render.rotate[1] = 1.0
+        elif(key==b'l'):
+            render.rotate[0] = -1.0
+            render.rotate[2] = 1.0
+        elif(key==b'j'):
+            render.rotate[0] = 1.0
+            render.rotate[2] = 1.0
 
         glutPostRedisplay()
 
-def keySpecialFunc(key,x,y):
-    if(key == GLUT_KEY_UP):
-        render.rotate[0] = 1.0
-        render.rotate[1] = 1.0
-    elif(key==GLUT_KEY_DOWN):
-        render.rotate[0] = -1.0
-        render.rotate[1] = 1.0
-    elif(key==GLUT_KEY_RIGHT):
-        render.rotate[0] = -1.0
-        render.rotate[2] = 1.0
-    elif(key==GLUT_KEY_LEFT):
-        render.rotate[0] = 1.0
-        render.rotate[2] = 1.0
-    glutPostRedisplay()
-
 def doInput():
-    global listPoint
+    global listPoints
     if not taskQueue.empty():
         command = taskQueue.get()
         if (command=='exit'):
             glutLeaveMainLoop() #exit
         elif (command=='insert'):
-            listPoint = termInput.pointBuffer
+            listPoints[0] = termInput.pointBuffer
             glutPostRedisplay()
         elif (command=='reset'):
             print("reset")
@@ -74,8 +71,8 @@ def doInput():
         taskQueue.task_done()
 
 def prepareDisplay():
-    global listPoint
-    render.listPoint = listPoint
+    global listPoints
+    render.listPoints = listPoints
     render.displayFunc()
 
 if __name__ =="__main__":
@@ -96,7 +93,6 @@ if __name__ =="__main__":
     glutReshapeFunc(render.windowResized)
     glutDisplayFunc(prepareDisplay)
     glutKeyboardFunc(keyboardFunc)
-    glutSpecialFunc(keySpecialFunc)
     glutIdleFunc(doInput)
 
     glutMainLoop()
