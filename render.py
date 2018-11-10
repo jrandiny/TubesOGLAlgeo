@@ -10,6 +10,7 @@ import random
 import numpy as np
 
 listPoints =[np.zeros([1,2])]
+colorList = np.array([np.array([1.0,1.0,1.0])])
 zoomRatio = 1.0
 aspect = 1.0
 
@@ -40,6 +41,7 @@ def grid():
 def displayFunc():
     global translate
     global rotate
+    global colorList
 
     renderViewport()
 
@@ -52,19 +54,26 @@ def displayFunc():
     glRotatef(rotate[1],0,1,0)
     glRotatef(rotate[2],0,0,1)
 
+    if(len(listPoints)>len(colorList)):
+        tempList = []
+        for poly in listPoints:
+            tempList.append(np.array([random.random(), random.random(), random.random()]))
+        colorList = np.array(tempList)    
+
     if(is3D):
         glBegin(GL_QUADS)          
-        for poly in listPoints:
-            glColor3f(random.random(), random.random(), random.random()) 
+        for i,poly in enumerate(listPoints):
+            glColor3f(colorList[i][0],colorList[i][1],colorList[i][2])
+            # glColor3f(random.random(), random.random(), random.random()) 
             for point in poly:
                 glVertex3f(point[0],point[1],point[2])
 
         glEnd()
-    else:
-                
-        for poly in listPoints:
+    else:             
+        for i,poly in enumerate(listPoints):
             glBegin(GL_POLYGON)  
-            glColor3f(random.random(), random.random(), random.random()) 
+            glColor3f(colorList[i][0],colorList[i][1],colorList[i][2])
+            # glColor3f(random.random(), random.random(), random.random()) 
             for point in poly:
                 glVertex3f(point[0],point[1],point[2])
             glEnd()
