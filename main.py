@@ -89,6 +89,7 @@ def doInput():
             render.is3D = True
         elif (command=='3D'):
             render.is3D = True
+            termInput.is3D = True
             listPoints = getCube()
             glutPostRedisplay()
         else:

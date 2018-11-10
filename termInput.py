@@ -38,7 +38,15 @@ def inputPoint():
     while (N<3 or len(masukan)!=1):
         Temp = input("Input N: ") #tipe string untuk validasi
         masukan = Temp.split(' ')
-        N = int(masukan[0])
+        try:
+            N = int(masukan[0])
+        except:
+            print('inputnya integer')
+        if (len(masukan)!=1):
+            print('inputya 1 angka')
+        else:
+            if (N<3):
+                print('inputnya minimal 3 titik')
     arrPoint = [] # tipe menyimpan array of point
     print("Pastikan input titik sudah clockwise!")
     for i in range(1,N+1,1): #iterasi sebanyak N kali
