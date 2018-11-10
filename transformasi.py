@@ -31,7 +31,12 @@ def rotasi(points,degree,a,b,c,is3D):
         pengali=np.append(pengali,[[a*c*(1-math.cos(sudut))-b*math.sin(sudut),b*c*(1-math.cos(sudut))+a*math.sin(sudut),math.pow(c,2)*(1-math.cos(sudut))+math.cos(sudut)]],axis=0)
         return transformasi(points,pengali,penambah)
         
-        
+def dilatasi(points,k):
+    penambah=np.zeros(3)
+    pengali=np.array([[k,0,0]])
+    pengali=np.append(pengali,[[0,k,0]],axis=0)
+    pengali=np.append(pengali,[[0,0,k]],axis=0)
+    return transformasi(points,pengali,penambah)
         
 
 def refleksi(points,param):
@@ -56,7 +61,7 @@ def refleksi(points,param):
         return rotasi(points,180,param[0],param[1],param[2],False)        
     return transformasi(points,pengali,penambah)
 
-def shear(points,param,sb):
+def shear(points,sb,param):
     penambah=np.zeros(3)
     if(sb=="x"):
         pengali=np.array([[1,param,0]])
@@ -68,7 +73,7 @@ def shear(points,param,sb):
         pengali=np.append(pengali,[[0,0,0]],axis=0)
     return transformasi(points,pengali,penambah)
 
-def stretch(points,param,sb):
+def stretch(points,sb,param):
     penambah=np.zeros(3)
     if(sb=="x"):
         pengali=np.array([[1,0,0]])
@@ -87,7 +92,7 @@ def custom(points,array):
     if length==4:
         pengali=np.append(pengali,[[array[0],array[1],0]],axis=0)
         pengali=np.append(pengali,[[array[2],array[3],0]],axis=0)
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
     elif length==9:
         pengali=np.append(pengali,[[array[0],array[1],array[2]]],axis=0)
         pengali=np.append(pengali,[[array[3],array[4],array[5]]],axis=0)
