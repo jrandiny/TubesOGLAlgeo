@@ -87,11 +87,11 @@ def parsingCommand(command,listPoint):
         if (len(listCommand)==2):
             pointBuffer = transformasi.refleksi(listPoint,float(listCommand[1]))
     elif (listCommand[0]=='shear'):
-        if (len(listCommand)==3):
-            pointBuffer = transformasi.shear(listPoint,float(listCommand[1]),float(listCommand[2]))
+        if (len(listCommand)==3 and (listCommand[1]=='x' or istCommand[1]=='y' or istCommand[1]=='z')):
+            pointBuffer = transformasi.shear(listPoint,listCommand[1],float(listCommand[2]))
     elif (listCommand[0]=='stretch'):
-        if (len(listCommand)==3):
-            pointBuffer = transformasi.stretch(listPoint,float(listCommand[1]),float(listCommand[2]))
+        if (len(listCommand)==3 and (listCommand[1]=='x' or istCommand[1]=='y' or istCommand[1]=='z')):
+            pointBuffer = transformasi.stretch(listPoint,listCommand[1],float(listCommand[2]))
     elif (listCommand[0]=='custom'):
         arrCustom = []
         if (len(listCommand)-1 == 4):
