@@ -1,5 +1,8 @@
 import numpy as np
 import transformasi
+import math
+
+import time
 
 bacaPoint = False
 pointBuffer = np.zeros((1,2))
@@ -8,12 +11,15 @@ is3D = False
 def worker(workQueue):
     global is3D
     while(True):
+        time.sleep(0.1)
         if(workQueue.empty()):
             if(bacaPoint): #sudah membaca input point
                 command = input("$ ") #input command
                 listCommand = command.split(' ')
                 if (listCommand[0]=='multiple'):
                     if (len(listCommand)==2): #validasi input multiple
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         multiCommand = []
                         for i in range (1,int(listCommand[1])+1):
                             multiCommand.append(input("   "))
@@ -21,6 +27,17 @@ def worker(workQueue):
                         for mcom in multiCommand:
                             workQueue.put(mcom,False)
 
+=======
+=======
+>>>>>>> Stashed changes
+                        if (isInt(listCommand[1])):
+                            for i in range (1,int(listCommand[1])+1):
+                                multiCommand = input("   ")
+                                workQueue.put(multiCommand,False)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
                 elif (listCommand[0]=='add'):
                     if (len(listCommand)==1): #validasi input add
                         inputPoint()
@@ -55,7 +72,7 @@ def inputPoint():
     print("Pastikan input titik sudah clockwise!")
     for i in range(1,N+1,1): #iterasi sebanyak N kali
         point = [] # tipe menyimpan tipe data point
-        while (len(point)<2 or len(point)>3): #meminta input yang benar
+        while ((len(point)<2 or len(point)>3)): #meminta input yang benar
             #input benar saat jumlah titiknya 2 atau 3
             print('titik('+str(i)+') ',end='')
             point = input("= ").split(' ') # meminta input
@@ -69,7 +86,7 @@ def inputPoint():
     pointBuffer= arrPoint 
     bacaPoint = True #sudah meminta input point
 
-def parsingCommand(command,listPoint):
+def parsingCommand(command,listPoint,step):
     global pointBuffer
     global is3D
     pointBuffer = listPoint
@@ -78,7 +95,10 @@ def parsingCommand(command,listPoint):
         if (len(listCommand)-1 ==2):
             listCommand.append(0)
         if (len(listCommand)==4):
-            pointBuffer = transformasi.translasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]))
+            x = float(listCommand[1])
+            y = float(listCommand[2])
+            z = float(listCommand[3])
+            pointBuffer = transformasi.translasi(listPoint,x/step,y/step,z/step)
     elif (listCommand[0]=='dilate'):
         if (len(listCommand)==2):
             pointBuffer = transformasi.dilatasi(listPoint,float(listCommand[1]))
@@ -86,15 +106,18 @@ def parsingCommand(command,listPoint):
         if (len(listCommand)-1 ==3):
             listCommand.append(0)
         if (len(listCommand)==5):
-            pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]),float(listCommand[4]),is3D)
+            x = float(listCommand[2])
+            y = float(listCommand[3])
+            z = float(listCommand[4])
+            pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1])/step,x,y,z,is3D)
     elif (listCommand[0]=='reflect'):
         if (len(listCommand)==2):
             pointBuffer = transformasi.refleksi(listPoint,listCommand[1])
     elif (listCommand[0]=='shear'):
-        if (len(listCommand)==3 and (listCommand[1]=='x' or istCommand[1]=='y' or istCommand[1]=='z')):
+        if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
             pointBuffer = transformasi.shear(listPoint,listCommand[1],float(listCommand[2]))
     elif (listCommand[0]=='stretch'):
-        if (len(listCommand)==3 and (listCommand[1]=='x' or istCommand[1]=='y' or istCommand[1]=='z')):
+        if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
             pointBuffer = transformasi.stretch(listPoint,listCommand[1],float(listCommand[2]))
     elif (listCommand[0]=='custom'):
         arrCustom = []
@@ -117,3 +140,23 @@ def parsingCommand(command,listPoint):
             arrCustom.append(float(listCommand[9]))
         if (len(arrCustom)==9):
             pointBuffer = transformasi.custom(listPoint,arrCustom)
+
+def isInt(param):
+    try:
+        x = int(param)
+        return true
+    except:
+        return false
+
+def isAllInt(param):
+    i = 0
+    Int = True
+    while (i<len(param) and Int):
+        if(not(isInt(param[i]))):
+            Int = False
+        else:
+            i += 1
+    return Int
+
+def jarak0(x,y,z):
+    return math.sqrt(math.pow(x,2)+math.pow(y,2)+math.pow(z,2))

@@ -18,6 +18,10 @@ import termInput
 taskQueue = Queue()
 pointQueue = Queue()
 
+step = 100
+scaleNow = 101
+saveComm = ""
+
 listPoints =[np.array([[-50,-50,0],[50,-50,0],[50,50,0],[-50,50,0]])]
 
 def getCube():
@@ -69,7 +73,12 @@ def keyboardFunc(key,x,y):
 
 def doInput():
     global listPoints
-    if not taskQueue.empty():
+    global scaleNow
+    global saveComm
+
+    waitTask = False
+
+    if not taskQueue.empty() and scaleNow>100:
         command = taskQueue.get()
         if (command=='exit'):
             glutLeaveMainLoop() #exit
@@ -81,7 +90,7 @@ def doInput():
             glutPostRedisplay()
         elif (command=='reset'):
             print("reset")
-        elif (command=='set3DView'):
+        elif (command=='set3Dview'):
             render.is3D = True
         elif (command=='3D'):
             render.is3D = True
@@ -89,11 +98,25 @@ def doInput():
             listPoints = getCube()
             glutPostRedisplay()
         else:
+            scaleNow = 1
+            saveComm = command
+            waitTask = True
+        
+        if(not waitTask):
+            taskQueue.task_done()     
+       
+    else:
+        if (scaleNow<=step):
             for i,poly in enumerate(listPoints):
-                termInput.parsingCommand(command,poly)
+                termInput.parsingCommand(saveComm,poly,step)
+                # print(termInput.pointBuffer)
                 listPoints[i] = termInput.pointBuffer
             glutPostRedisplay()
-        taskQueue.task_done()
+            scaleNow +=1
+            if(scaleNow==step+1):
+                taskQueue.task_done()
+        
+
 
 def prepareDisplay():
     global listPoints
