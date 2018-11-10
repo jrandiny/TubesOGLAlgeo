@@ -20,6 +20,20 @@ pointQueue = Queue()
 
 listPoints =[np.array([[-0.5,-0.5,-3],[0.5,-0.5,-3],[0.5,0.5,-3],[-0.5,0.5,-3]])]
 
+def getCube():
+    return [
+                # depan belakang
+                np.array([[1,1,1],[1,-1,1],[-1,-1,1],[-1,1,1]]),
+                np.array([[1,1,-1],[1,-1,-1],[-1,-1,-1],[-1,1,-1]]),
+                # atas bawah
+                np.array([[1,1,1],[-1,1,1],[-1,1,-1],[1,1,-1]]),
+                np.array([[1,-1,1],[-1,-1,1],[-1,-1,-1],[1,-1,-1]]),
+                # kiri kanan
+                np.array([[1,1,-1],[1,-1,-1],[1,-1,1],[1,1,1]]),
+                np.array([[-1,1,-1],[-1,-1,-1],[-1,-1,1],[-1,1,1]])
+                ]
+
+
 def keyboardFunc(key,x,y):
     if key==b'Q':
         glutLeaveMainLoop()
@@ -68,10 +82,15 @@ def doInput():
             glutPostRedisplay()
         elif (command=='add'):
             listPoints.append(termInput.pointBuffer)
+            glutPostRedisplay()
         elif (command=='reset'):
             print("reset")
+        elif (command=='set3DView'):
+            render.is3D = True
         elif (command=='3D'):
             render.is3D = True
+            listPoints = getCube()
+            glutPostRedisplay()
         else:
             for i,poly in enumerate(listPoints):
                 termInput.parsingCommand(command,poly)
