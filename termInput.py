@@ -20,7 +20,7 @@ def worker(workQueue):
                 elif (listCommand[0]=='add'):
                     if (len(listCommand)==1): #validasi input add
                         inputPoint()
-                        command = "insert"
+                        command = "add"
             else: #belum meminta input point
                 inputPoint()
                 command = "insert"
