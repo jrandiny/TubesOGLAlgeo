@@ -14,7 +14,7 @@ def worker(workQueue):
                 listCommand = command.split(' ')
                 if (listCommand[0]=='multiple'):
                     if (len(listCommand)==2): #validasi input multiple
-                        for i in range (1,listCommand[1]+1):
+                        for i in range (1,int(listCommand[1])+1):
                             multiCommand = input("   ")
                             workQueue.put(multiCommand,False)
                 elif (listCommand[0]=='add'):
@@ -85,7 +85,7 @@ def parsingCommand(command,listPoint):
             pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]),float(listCommand[4]),is3D)
     elif (listCommand[0]=='reflect'):
         if (len(listCommand)==2):
-            pointBuffer = transformasi.refleksi(listPoint,float(listCommand[1]))
+            pointBuffer = transformasi.refleksi(listPoint,listCommand[1])
     elif (listCommand[0]=='shear'):
         if (len(listCommand)==3 and (listCommand[1]=='x' or istCommand[1]=='y' or istCommand[1]=='z')):
             pointBuffer = transformasi.shear(listPoint,listCommand[1],float(listCommand[2]))
