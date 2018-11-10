@@ -39,37 +39,31 @@ def keyboardFunc(key,x,y):
         glutLeaveMainLoop()
     else:
         if(key==b'q'):
-            render.translate[2] = -1.0
+            render.translate[2] += -1.0
         elif(key==b'e'):
-            render.translate[2] = 1.0
+            render.translate[2] += 1.0
         elif(key==b'a'):
-            render.translate[0] = 0.5
+            render.translate[0] += 0.5
         elif(key==b'd'):
-            render.translate[0] = -0.5
+            render.translate[0] += -0.5
         elif(key==b'w'):
-            render.translate[1] = -0.5
+            render.translate[1] += -0.5
         elif(key==b's'):
-            render.translate[1] = 0.5
+            render.translate[1] += 0.5
         
         if(render.is3D):
             if(key == b'i'):
-                render.rotate[0] = 1.0
-                render.rotate[1] = 1.0
+                render.rotate[0] += 1.0
             elif(key==b'k'):
-                render.rotate[0] = -1.0
-                render.rotate[1] = 1.0
+                render.rotate[0] += -1.0
             elif(key==b'l'):
-                render.rotate[0] = -1.0
-                render.rotate[2] = 1.0
+                render.rotate[1] += -1.0
             elif(key==b'j'):
-                render.rotate[0] = 1.0
-                render.rotate[2] = 1.0
+                render.rotate[1] += 1.0
             elif(key==b'u'):
-                render.rotate[0] = 1.0
-                render.rotate[3] = 1.0
+                render.rotate[2] += 1.0
             elif(key==b'o'):
-                render.rotate[0] = -1.0
-                render.rotate[3] = 1.0
+                render.rotate[2] += -1.0
 
         glutPostRedisplay()
 
