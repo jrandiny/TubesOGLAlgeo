@@ -13,9 +13,14 @@ def worker(workQueue):
                 command = input("$ ") #input command
                 listCommand = command.split(' ')
                 if (listCommand[0]=='multiple'):
-                    for i in range (1,listCommand[1]+1):
-                        multiCommand = input("   ")
-                        workQueue.put(multiCommand,False)
+                    if (len(listCommand)==2): #validasi input multiple
+                        for i in range (1,listCommand[1]+1):
+                            multiCommand = input("   ")
+                            workQueue.put(multiCommand,False)
+                elif (listCommand[0]=='add'):
+                    if (len(listCommand)==1): #validasi input add
+                        inputPoint()
+                        command = "insert"
             else: #belum meminta input point
                 inputPoint()
                 command = "insert"
