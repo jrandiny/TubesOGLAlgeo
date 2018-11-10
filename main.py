@@ -66,6 +66,8 @@ def doInput():
         elif (command=='insert'):
             listPoints[0] = termInput.pointBuffer
             glutPostRedisplay()
+        elif (command=='add'):
+            listPoints.append(termInput.pointBuffer)
         elif (command=='reset'):
             print("reset")
         elif (command=='3D'):
