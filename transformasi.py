@@ -26,9 +26,9 @@ def rotasi(points,degree,a,b,c,is3D):
         a/=length
         b/=length
         c/=length
-        pengali=np.array([[math.pow(a,2)*(1-math.cos(sudut))+math.cos(sudut),a*b*(1-math.cos(sudut))-c*math.sin(sudut),a*c(1-math.cos(sudut))+b*math.sin(sudut)]])
-        pengali=np.append(pengali,[[a*b*(1-math.cos(sudut))+c*math.sin(sudut),math.pow(b,2)*(1-math.cos(sudut))+math.cos(sudut),b*c(1-math.cos(sudut))-a*math.sin(sudut)]],axis=0)
-        pengali=np.append(pengali,[[a*c*(1-math.cos(sudut))-b*math.sin(sudut),b*c(1-math.cos(sudut))+a*math.sin(sudut),math.pow(c,2)*(1-math.cos(sudut))+math.cos(sudut)]],axis=0)
+        pengali=np.array([[math.pow(a,2)*(1-math.cos(sudut))+math.cos(sudut),a*b*(1-math.cos(sudut))-c*math.sin(sudut),a*c*(1-math.cos(sudut))+b*math.sin(sudut)]])
+        pengali=np.append(pengali,[[a*b*(1-math.cos(sudut))+c*math.sin(sudut),math.pow(b,2)*(1-math.cos(sudut))+math.cos(sudut),b*c*(1-math.cos(sudut))-a*math.sin(sudut)]],axis=0)
+        pengali=np.append(pengali,[[a*c*(1-math.cos(sudut))-b*math.sin(sudut),b*c*(1-math.cos(sudut))+a*math.sin(sudut),math.pow(c,2)*(1-math.cos(sudut))+math.cos(sudut)]],axis=0)
         return transformasi(points,pengali,penambah)
         
         
@@ -39,19 +39,19 @@ def refleksi(points,param):
     if (param=="x"):
         pengali=np.array([[1,0,0]])
         pengali=np.append(pengali,[[0,-1,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
     elif (param=="y"):
         pengali=np.array([[-1,0,0]])
         pengali=np.append(pengali,[[0,1,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
     elif (param=="y=x"):
         pengali=np.array([[0,1,0]])
         pengali=np.append(pengali,[[1,0,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
     elif (param=="y=-x"):
         pengali=np.array([[0,-1,0]])
         pengali=np.append(pengali,[[-1,0,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,1]],axis=0)
     else:
         return rotasi(points,180,param[0],param[1],param[2],False)        
     return transformasi(points,pengali,penambah)

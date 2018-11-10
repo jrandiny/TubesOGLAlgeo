@@ -58,16 +58,21 @@ def parsingCommand(command,listPoint):
     elif (listCommand[0]=='dilate'):
         print("dilatasi")
     elif (listCommand[0]=='rotate'):
-        pass
-        pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]))
+        # pass
+        if (len(listCommand)-1 ==3):
+            listCommand.append(0)
+            is3D=False
+        else:
+            is3D=True
+        pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]),float(listCommand[4]),is3D)
     elif (listCommand[0]=='reflect'):
-        pass
+        # pass
         pointBuffer = transformasi.refleksi(listPoint,float(listCommand[1]))
     elif (listCommand[0]=='shear'):
-        pass
+        # pass
         pointBuffer = transformasi.shear(listPoint,float(listCommand[2]),float(listCommand[1]))
     elif (listCommand[0]=='stretch'):
-        pass
+        # pass
         pointBuffer = transformasi.stretch(listPoint,float(listCommand[2]),float(listCommand[1]))
     elif (listCommand[0]=='custom'):
         arrCustom = []
