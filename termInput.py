@@ -26,15 +26,19 @@ def worker(workQueue):
                 command = "insert"
             workQueue.put(command,False)
             if (is3D):
-                is3D = False
-                command = '3D'
+                command = 'set3Dview'
                 workQueue.put(command,False)
 
 def inputPoint():
     global pointBuffer
     global bacaPoint
     global is3D
-    N = int(input("Input N: ")) #tipe integer untuk jumlah point
+    N = -1 #tipe integer untuk jumlah point, inisiasi dengan -1
+    masukan = []
+    while (N<3 or len(masukan)!=1):
+        Temp = input("Input N: ") #tipe string untuk validasi
+        masukan = Temp.split(' ')
+        N = int(masukan[0])
     arrPoint = [] # tipe menyimpan array of point
     print("Pastikan input titik sudah clockwise!")
     for i in range(1,N+1,1): #iterasi sebanyak N kali
@@ -55,6 +59,8 @@ def inputPoint():
 
 def parsingCommand(command,listPoint):
     global pointBuffer
+    global is3D
+    pointBuffer = listPoint
     listCommand = command.split(' ')
     if (listCommand[0]=="translate"):
         if (len(listCommand)-1 ==2):
@@ -67,9 +73,6 @@ def parsingCommand(command,listPoint):
     elif (listCommand[0]=='rotate'):
         if (len(listCommand)-1 ==3):
             listCommand.append(0)
-            is3D=False
-        else:
-            is3D=True
         if (len(listCommand)==5):
             pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]),float(listCommand[4]),is3D)
     elif (listCommand[0]=='reflect'):
