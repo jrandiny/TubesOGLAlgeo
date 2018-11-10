@@ -12,12 +12,13 @@ def translasi(points,dx,dy,dz):
 
 def rotasi(points,degree,a,b,c,is3D):
     sudut=toRadian(degree)
-    if !is3D:
-        penambah=np.array([-1*a,-1*b])
-        pengali=np.array([[math.cos(sudut),-1*math.sin(sudut)]])
-        pengali=np.append(pengali,[[math.sin(sudut),math.cos(sudut)]],axis=0)
+    if not is3D:
+        penambah=np.array([-1*a,-1*b,0])
+        pengali=np.array([[math.cos(sudut),-1*math.sin(sudut),0]])
+        pengali=np.append(pengali,[[math.sin(sudut),math.cos(sudut),0]],axis=0)
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
         hasil=transformasi(points,pengali,penambah)
-        hasil=translasi(hasil,-a,-b)
+        hasil=translasi(hasil,a,b,0)
         return hasil
     else:
         penambah=np.zeros(3)
@@ -34,42 +35,49 @@ def rotasi(points,degree,a,b,c,is3D):
         
 
 def refleksi(points,param):
-    penambah=np.zeros((1,2))    
+    penambah=np.zeros(3)    
     if (param=="x"):
-        pengali=np.array([[1,0]])
-        pengali=np.append(pengali,[[0,-1]],axis=0)
+        pengali=np.array([[1,0,0]])
+        pengali=np.append(pengali,[[0,-1,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
     elif (param=="y"):
-        pengali=np.array([[-1,0]])
-        pengali=np.append(pengali,[[0,1]],axis=0)
+        pengali=np.array([[-1,0,0]])
+        pengali=np.append(pengali,[[0,1,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
     elif (param=="y=x"):
-        pengali=np.array([[0,1]])
-        pengali=np.append(pengali,[[1,0]],axis=0)
+        pengali=np.array([[0,1,0]])
+        pengali=np.append(pengali,[[1,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
     elif (param=="y=-x"):
-        pengali=np.array([[0,-1]])
-        pengali=np.append(pengali,[[-1,0]],axis=0)
+        pengali=np.array([[0,-1,0]])
+        pengali=np.append(pengali,[[-1,0,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
     else:
-        return rotasi(points,180,param[0],param[1])        
+        return rotasi(points,180,param[0],param[1],param[2],False)        
     return transformasi(points,pengali,penambah)
 
 def shear(points,param,sb):
-    penambah=np.zeros((1,2))
+    penambah=np.zeros(3)
     if(sb=="x"):
-        pengali=np.array([[1,param]])
-        pengali=np.append(pengali,[[0,1]],axis=0)
+        pengali=np.array([[1,param,0]])
+        pengali=np.append(pengali,[[0,1,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
     elif(sb=="y"):
-        pengali=np.array([[1,0]])
-        pengali=np.append(pengali,[[param,1]],axis=0)
+        pengali=np.array([[1,0,0]])
+        pengali=np.append(pengali,[[param,1,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
     return transformasi(points,pengali,penambah)
 
 def stretch(points,param,sb):
-    penambah=np.zeros((1,2))
-    pengali=[]
+    penambah=np.zeros(3)
     if(sb=="x"):
-        pengali=np.array([[1,0]])
-        pengali=np.append(pengali,[[0,param]],axis=0)
+        pengali=np.array([[1,0,0]])
+        pengali=np.append(pengali,[[0,param,0]],axis=0)
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
     elif(sb=="y"):
-        pengali=np.array([[param,0]])
-        pengali=np.append(pengali,[[0,1]],axis=0)  
+        pengali=np.array([[param,0,0]])
+        pengali=np.append(pengali,[[0,1,0]],axis=0)  
+        pengali=np.append(pengali,[[0,0,0]],axis=0)
     return transformasi(points,pengali,penambah)
 
 def custom(points,array):
