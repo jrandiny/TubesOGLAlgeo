@@ -14,9 +14,13 @@ def worker(workQueue):
                 listCommand = command.split(' ')
                 if (listCommand[0]=='multiple'):
                     if (len(listCommand)==2): #validasi input multiple
+                        multiCommand = []
                         for i in range (1,int(listCommand[1])+1):
-                            multiCommand = input("   ")
-                            workQueue.put(multiCommand,False)
+                            multiCommand.append(input("   "))
+                        
+                        for mcom in multiCommand:
+                            workQueue.put(mcom,False)
+
                 elif (listCommand[0]=='add'):
                     if (len(listCommand)==1): #validasi input add
                         inputPoint()
