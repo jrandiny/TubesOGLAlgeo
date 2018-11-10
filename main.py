@@ -71,8 +71,9 @@ def doInput():
         elif (command=='3D'):
             render.is3D = True
         else:
-            termInput.parsingCommand(command,listPoint)
-            listPoint = termInput.pointBuffer
+            for i,poly in enumerate(listPoints):
+                termInput.parsingCommand(command,poly)
+                listPoints[i] = termInput.pointBuffer
             glutPostRedisplay()
         taskQueue.task_done()
 
