@@ -21,6 +21,7 @@ pointQueue = Queue()
 step = 100
 scaleNow = 101
 saveComm = ""
+savePoints =[]
 
 listPoints =[np.array([[-50,-50,0],[50,-50,0],[50,50,0],[-50,50,0]])]
 
@@ -75,6 +76,7 @@ def doInput():
     global listPoints
     global scaleNow
     global saveComm
+    global savePoints
 
     waitTask = False
 
@@ -99,6 +101,7 @@ def doInput():
             glutPostRedisplay()
         else:
             scaleNow = 1
+            savePoints = listPoints.copy()
             saveComm = command
             waitTask = True
         
@@ -107,9 +110,8 @@ def doInput():
        
     else:
         if (scaleNow<=step):
-            for i,poly in enumerate(listPoints):
-                termInput.parsingCommand(saveComm,poly,step)
-                # print(termInput.pointBuffer)
+            for i,poly in enumerate(savePoints):
+                termInput.parsingCommand(saveComm,poly,scaleNow)
                 listPoints[i] = termInput.pointBuffer
             glutPostRedisplay()
             scaleNow +=1
