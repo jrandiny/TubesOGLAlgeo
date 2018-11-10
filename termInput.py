@@ -54,26 +54,28 @@ def parsingCommand(command,listPoint):
     if (listCommand[0]=="translate"):
         if (len(listCommand)-1 ==2):
             listCommand.append(0)
-        pointBuffer = transformasi.translasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]))
+        if (len(listCommand)==4):
+            pointBuffer = transformasi.translasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]))
     elif (listCommand[0]=='dilate'):
-        print("dilatasi")
+        if (len(listCommand)==2):
+            pointBuffer = transformasi.dilatasi(listPoint,float(listCommand[1]))
     elif (listCommand[0]=='rotate'):
-        # pass
         if (len(listCommand)-1 ==3):
             listCommand.append(0)
             is3D=False
         else:
             is3D=True
-        pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]),float(listCommand[4]),is3D)
+        if (len(listCommand)==5):
+            pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1]),float(listCommand[2]),float(listCommand[3]),float(listCommand[4]),is3D)
     elif (listCommand[0]=='reflect'):
-        # pass
-        pointBuffer = transformasi.refleksi(listPoint,float(listCommand[1]))
+        if (len(listCommand)==2):
+            pointBuffer = transformasi.refleksi(listPoint,float(listCommand[1]))
     elif (listCommand[0]=='shear'):
-        # pass
-        pointBuffer = transformasi.shear(listPoint,float(listCommand[2]),float(listCommand[1]))
+        if (len(listCommand)==3):
+            pointBuffer = transformasi.shear(listPoint,float(listCommand[1]),float(listCommand[2]))
     elif (listCommand[0]=='stretch'):
-        # pass
-        pointBuffer = transformasi.stretch(listPoint,float(listCommand[2]),float(listCommand[1]))
+        if (len(listCommand)==3):
+            pointBuffer = transformasi.stretch(listPoint,float(listCommand[1]),float(listCommand[2]))
     elif (listCommand[0]=='custom'):
         arrCustom = []
         if (len(listCommand)-1 == 4):
@@ -82,7 +84,7 @@ def parsingCommand(command,listPoint):
             arrCustom.append(float(listCommand[2]))
             arrCustom.append(float(listCommand[3]))
             arrCustom.append(float(listCommand[4]))
-        else:
+        elif(len(listCommand)-1 == 9):
             #custom 3D
             arrCustom.append(float(listCommand[1]))
             arrCustom.append(float(listCommand[2]))
@@ -93,4 +95,5 @@ def parsingCommand(command,listPoint):
             arrCustom.append(float(listCommand[7]))
             arrCustom.append(float(listCommand[8]))
             arrCustom.append(float(listCommand[9]))
-        pointBuffer = transformasi.custom(listPoint,arrCustom)
+        if (len(arrCustom)==9):
+            pointBuffer = transformasi.custom(listPoint,arrCustom)
