@@ -36,7 +36,7 @@ def keyboardFunc(key,x,y):
             render.translate[1] = -0.5
         elif(key==b's'):
             render.translate[1] = 0.5
-        if(key == b'i'):
+        elif(key == b'i'):
             render.rotate[0] = 1.0
             render.rotate[1] = 1.0
         elif(key==b'k'):
@@ -48,6 +48,12 @@ def keyboardFunc(key,x,y):
         elif(key==b'j'):
             render.rotate[0] = 1.0
             render.rotate[2] = 1.0
+        elif(key==b'u'):
+            render.rotate[0] = 1.0
+            render.rotate[3] = 1.0
+        elif(key==b'o'):
+            render.rotate[0] = -1.0
+            render.rotate[3] = 1.0
 
         glutPostRedisplay()
 
