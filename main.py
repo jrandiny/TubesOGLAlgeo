@@ -18,19 +18,19 @@ import termInput
 taskQueue = Queue()
 pointQueue = Queue()
 
-listPoints =[np.array([[-0.5,-0.5,-3],[0.5,-0.5,-3],[0.5,0.5,-3],[-0.5,0.5,-3]])]
+listPoints =[np.array([[-50,-50,0],[50,-50,0],[50,50,0],[-50,50,0]])]
 
 def getCube():
     return [
                 # depan belakang
-                np.array([[1,1,1],[1,-1,1],[-1,-1,1],[-1,1,1]]),
-                np.array([[1,1,-1],[1,-1,-1],[-1,-1,-1],[-1,1,-1]]),
+                np.array([[50,50,50],[50,-50,50],[-50,-50,50],[-50,50,50]]),
+                np.array([[50,50,-50],[50,-50,-50],[-50,-50,-50],[-50,50,-50]]),
                 # atas bawah
-                np.array([[1,1,1],[-1,1,1],[-1,1,-1],[1,1,-1]]),
-                np.array([[1,-1,1],[-1,-1,1],[-1,-1,-1],[1,-1,-1]]),
+                np.array([[50,50,50],[-50,50,50],[-50,50,-50],[50,50,-50]]),
+                np.array([[50,-50,50],[-50,-50,50],[-50,-50,-50],[50,-50,-50]]),
                 # kiri kanan
-                np.array([[1,1,-1],[1,-1,-1],[1,-1,1],[1,1,1]]),
-                np.array([[-1,1,-1],[-1,-1,-1],[-1,-1,1],[-1,1,1]])
+                np.array([[50,50,-50],[50,-50,-50],[50,-50,50],[50,50,50]]),
+                np.array([[-50,50,-50],[-50,-50,-50],[-50,-50,50],[-50,50,50]])
                 ]
 
 
@@ -39,17 +39,17 @@ def keyboardFunc(key,x,y):
         glutLeaveMainLoop()
     else:
         if(key==b'q'):
-            render.translate[2] += -1.0
+            render.translate[2] += -5.0
         elif(key==b'e'):
-            render.translate[2] += 1.0
+            render.translate[2] += 5.0
         elif(key==b'a'):
-            render.translate[0] += 0.5
+            render.translate[0] += 2.5
         elif(key==b'd'):
-            render.translate[0] += -0.5
+            render.translate[0] += -2.5
         elif(key==b'w'):
-            render.translate[1] += -0.5
+            render.translate[1] += -2.5
         elif(key==b's'):
-            render.translate[1] += 0.5
+            render.translate[1] += 2.5
         
         if(render.is3D):
             if(key == b'i'):

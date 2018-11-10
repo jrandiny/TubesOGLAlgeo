@@ -15,25 +15,25 @@ aspect = 1.0
 
 is3D = False
 
-translate = [0.0,0.0,-5.0]
+translate = [0.0,0.0,-250.0]
 rotate = [0.0,0.0,0.0,0.0]
 
 def grid():
     glBegin(GL_LINES)
     # x
     glColor3f(1.0,0,0) # red
-    glVertex3f(-4.0, 0.0, 0.0)
-    glVertex3f(4.0, 0.0, 0.0)
+    glVertex3f(-500.0, 0.0, 0.0)
+    glVertex3f(500.0, 0.0, 0.0)
 
     # y
     glColor3f(0,1.0,0) # hijau
-    glVertex3f(0.0, -4.0, 0.0)
-    glVertex3f(0.0, 4.0, 0.0)
+    glVertex3f(0.0, -500.0, 0.0)
+    glVertex3f(0.0, 500.0, 0.0)
 
     if(is3D):
         glColor3f(0,0,1.0) # biru
-        glVertex3f(0.0, 0.0, -4.0)
-        glVertex3f(0.0, 0.0, 4.0)
+        glVertex3f(0.0, 0.0, -500.0)
+        glVertex3f(0.0, 0.0, 500.0)
     glEnd()
 
 
@@ -75,7 +75,7 @@ def displayFunc():
 
 def renderViewport():
     glLoadIdentity()
-    gluPerspective(45,aspect,0.1,50.0)
+    gluPerspective(45,aspect,0.1,2000.0)
     # glFrustum(-1.0*zoomRatio*aspect,1.0*zoomRatio*aspect,-1.0*zoomRatio,1.0*zoomRatio,1.0,50.0) 
 
 
