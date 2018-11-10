@@ -52,16 +52,26 @@ def displayFunc():
     glRotatef(rotate[0],rotate[1],rotate[2],rotate[3])
     rotate = [0.0,0.0,0.0,0.0]
 
+    if(is3D):
+        glBegin(GL_QUADS)          
+        for poly in listPoints:
+            glColor3f(random.random(), random.random(), random.random()) 
+            for point in poly:
+                glVertex3f(point[0],point[1],point[2])
 
+        glEnd()
+    else:
+                
+        for poly in listPoints:
+            glBegin(GL_POLYGON)  
+            glColor3f(random.random(), random.random(), random.random()) 
+            for point in poly:
+                glVertex3f(point[0],point[1],point[2])
+            glEnd()
 
+        
     
-    glBegin(GL_POLYGON)          
-    glColor3f(random.random(), random.random(), random.random()) 
-    for poly in listPoints:
-        for point in poly:
-            glVertex3f(point[0],point[1],point[2])
 
-    glEnd()
 
     grid()
 
