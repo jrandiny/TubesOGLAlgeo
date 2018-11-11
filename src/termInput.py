@@ -8,7 +8,7 @@ bacaPoint = False
 pointBuffer = np.zeros((1,2))
 is3D = False
 
-validCommand = np.array(['translate','rotate','dilate','shear','stretch','custom','reflect'])
+validCommand = np.array(['translate','rotate','dilate','shear','stretch','custom','reflect','multiple'])
 
 def worker(workQueue):
     global is3D
@@ -18,24 +18,23 @@ def worker(workQueue):
         if(workQueue.empty()):
             if(bacaPoint): #sudah membaca input point
                 command = input("$ ") #input command
-                listCommand = command.split(' ')
-                if (listCommand[0]=='multiple'):
-                    if (len(listCommand)==2): #validasi input multiple
-                        multiCommand = []
-                        for i in range (1,int(listCommand[1])+1):
-                            multiCommand.append(input("   "))
-                        
-                        for mcom in multiCommand:
-                            workQueue.put(mcom,False)
+                listCommand = command.split()
+                if (len(listCommand)>0): #validasi input tidak kosong
 
-                        if (isInt(listCommand[1])):
-                            for i in range (1,int(listCommand[1])+1):
-                                multiCommand = input("   ")
-                                workQueue.put(multiCommand,False)
-                elif (listCommand[0]=='add'):
-                    if (len(listCommand)==1): #validasi input add
-                        inputPoint()
-                        command = "add"
+                    if (listCommand[0]=='multiple'): #apakah commandnya multiple
+                        if (len(listCommand)==2): #validasi parameter multiple
+                            if (isInt(listCommand[1])):
+                                multiCommand = []
+                                for i in range (1,int(listCommand[1])+1):
+                                    multiCommand.append(input("   "))
+                                for mcom in multiCommand:
+                                    workQueue.put(mcom,False)
+
+                    elif (listCommand[0]=='add'): #apakah commandnya add
+                        if (len(listCommand)==1): #validasi parameter add
+                            inputPoint()
+                            command = "add"
+
             else: #belum meminta input point
                 inputPoint()
                 if (is3D):
@@ -44,10 +43,6 @@ def worker(workQueue):
                 else:
                     command = "insert"
             workQueue.put(command,False)
-
-            if (is3D):
-                command = 'set3Dview'
-                workQueue.put(command,False)
 
 def inputPoint():
     global pointBuffer
@@ -59,7 +54,7 @@ def inputPoint():
             masukan = input('2D atau 3D: ')
             masukan.replace(' ','')
             if (masukan!='2D' and masukan!='3D'):
-                print('input salah, mohon ulangi!')
+                print('Input salah, mohon ulangi!')
         if (masukan=='3D'):
             is3D = True
    
@@ -67,10 +62,10 @@ def inputPoint():
     if (is3D and not bacaPoint): 
         masukan = ''
         while (masukan!='y' and masukan!='n'):
-            masukan = input('input titik? (y,n): ')
+            masukan = input('Input titik? (y,n): ')
             Temp = masukan.split()
             if(len(Temp)!=1):
-                masukan = 'x'
+                masukan = ''
     else: #inoutnya 2D
         masukan = 'y'
     if(masukan =='y') :
@@ -84,10 +79,10 @@ def inputPoint():
                 if (N<3 and len(Temp)==1):
                     print("N harus > 2")
                 elif (len(Temp)!=1):
-                    print('input hanya boleh satu angka')
+                    print('Input hanya boleh satu angka')
             except:
                 N = -1
-                print("input bukan integer")
+                print("Input bukan integer")
         arrPoint = [] # tipe menyimpan array of point
         print("Pastikan input titik sudah clockwise!")
         for i in range(1,N+1,1): #iterasi sebanyak N kali
@@ -96,23 +91,23 @@ def inputPoint():
             if (is3D):
                 while (len(point)!=3 or not status): #meminta input titik 3 dimensi yang benar
                     #input benar saat jumlah titiknya 3
-                    print('titik('+str(i)+') ',end='')
+                    print('Titik('+str(i)+') ',end='')
                     point = input("= ").split() # meminta input
                     status = isAllInt(point)
                     if (not status):
-                        print('input harus integer')
+                        print('Input harus integer')
                     elif (len(point)!=3):
-                        print('input harus tiga koordinat, x,y,dan z')
+                        print('Input harus tiga koordinat, x,y,dan z')
             else:
                 while (len(point)!=2 or not status): #meminta input titik 3 dimensi yang benar
                     #input benar saat jumlah titiknya 3
-                    print('titik('+str(i)+') ',end='')
+                    print('Titik('+str(i)+') ',end='')
                     point = input("= ").split() # meminta input
                     status = isAllInt(point)
                     if (not status):
-                        print('input harus integer')
+                        print('Input harus integer')
                     elif (len(point)!=2):
-                        print('input harus dua koordinat, x dan y')
+                        print('Input harus dua koordinat, x dan y')
             if (len(point)==2): #jika inputnya adalah titik 2 dimensi
                 point.append(0)
             pointIns = [float(point[0]),float(point[1]),float(point[2])] #casting ke float
@@ -126,11 +121,12 @@ def parsingCommand(command,listPoint,percent):
     global is3D
 
     pointBuffer = listPoint
-    step = 100.0/float(percent)
-    listCommand = command.split(' ')
+    listCommand = command.split()
     commandValid = False
     if(np.isin(listCommand[0],validCommand)):
         commandValid = True
+        step = float(percent)/100.0
+        # if (len(listCommand)==4):
         if (listCommand[0]=='translate'):
             if (len(listCommand)-1 ==2):
                 listCommand.append(0)
@@ -189,6 +185,8 @@ def parsingCommand(command,listPoint,percent):
                 arrCustom.append(float(listCommand[9])/step)
             if (len(arrCustom)==9):
                 pointBuffer = transformasi.custom(listPoint,arrCustom)
+    else:
+        print('There is no \''+str(command)+'\' function')
     return commandValid
     
 

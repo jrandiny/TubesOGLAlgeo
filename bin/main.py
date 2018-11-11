@@ -12,6 +12,8 @@ import numpy as np
 from queue import Queue
 import threading
 
+import sys
+sys.path.append('../src')
 import render
 import termInput
 
