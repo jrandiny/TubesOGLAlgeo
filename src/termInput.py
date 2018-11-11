@@ -8,7 +8,8 @@ bacaPoint = False
 pointBuffer = np.zeros((1,2))
 is3D = False
 
-validCommand = np.array(['translate','rotate','dilate','shear','stretch','custom','reflect','multiple'])
+validCommand = np.array(['translate','rotate','dilate','shear','stretch','custom','reflect','multiple','help'])
+mainCommand = np.array(['exit','add','reset','insert','3D'])
 
 def worker(workQueue):
     global is3D
@@ -51,24 +52,24 @@ def inputPoint():
     if (not bacaPoint and not is3D):
         masukan = ''
         while (masukan!='2D' and masukan!='3D'):
-            masukan = input('2D atau 3D: ')
+            masukan = input('2D or 3D: ')
             masukan.replace(' ','')
             if (masukan!='2D' and masukan!='3D'):
-                print('Input salah, mohon ulangi!')
+                print('Wrong input. Try again!')
         if (masukan=='3D'):
             is3D = True
    
     # jika 3D tidak harus memasukan titik
     if (is3D and not bacaPoint): 
         masukan = ''
-        while (masukan!='y' and masukan!='n'):
-            masukan = input('Input titik? (y,n): ')
+        while (masukan!='yes' and masukan!='no'):
+            masukan = input('Want to input your own point? (yes/no)\nThe basic shape for 3D is a cube\nChoice: ')
             Temp = masukan.split()
             if(len(Temp)!=1):
                 masukan = ''
     else: #inoutnya 2D
-        masukan = 'y'
-    if(masukan =='y') :
+        masukan = 'yes'
+    if(masukan =='yes') :
         N = -1 #tipe integer untuk jumlah point, inisiasi dengan -1
         masukan = ''
         while (N<3 or len(Temp)!=1): #validasi input N
@@ -77,37 +78,37 @@ def inputPoint():
             try:
                 N = int(Temp[0])
                 if (N<3 and len(Temp)==1):
-                    print("N harus > 2")
+                    print("N must be bigger than two")
                 elif (len(Temp)!=1):
-                    print('Input hanya boleh satu angka')
+                    print('N can only contain one number')
             except:
                 N = -1
-                print("Input bukan integer")
+                print("The input must be integer")
         arrPoint = [] # tipe menyimpan array of point
-        print("Pastikan input titik sudah clockwise!")
+        print("Make sure your input is clockwise!")
         for i in range(1,N+1,1): #iterasi sebanyak N kali
             point = [] # tipe menyimpan tipe data point
             status = False
             if (is3D):
                 while (len(point)!=3 or not status): #meminta input titik 3 dimensi yang benar
                     #input benar saat jumlah titiknya 3
-                    print('Titik('+str(i)+') ',end='')
+                    print('Point('+str(i)+') ',end='')
                     point = input("= ").split() # meminta input
-                    status = isAllInt(point)
+                    status = isAllFloat(point)
                     if (not status):
-                        print('Input harus integer')
+                        print('The input must be number')
                     elif (len(point)!=3):
-                        print('Input harus tiga koordinat, x,y,dan z')
+                        print('The input has to be in x, y and z')
             else:
                 while (len(point)!=2 or not status): #meminta input titik 3 dimensi yang benar
                     #input benar saat jumlah titiknya 3
-                    print('Titik('+str(i)+') ',end='')
+                    print('Point('+str(i)+') ',end='')
                     point = input("= ").split() # meminta input
-                    status = isAllInt(point)
+                    status = isAllFloat(point)
                     if (not status):
-                        print('Input harus integer')
+                        print('The input must be number')
                     elif (len(point)!=2):
-                        print('Input harus dua koordinat, x dan y')
+                        print('The input has to be in x and y')
             if (len(point)==2): #jika inputnya adalah titik 2 dimensi
                 point.append(0)
             pointIns = [float(point[0]),float(point[1]),float(point[2])] #casting ke float
@@ -123,82 +124,158 @@ def parsingCommand(command,listPoint,percent):
     pointBuffer = listPoint
     listCommand = command.split()
     commandValid = False
-    if(np.isin(listCommand[0],validCommand)):
-        commandValid = True
-        step = float(percent)/100.0
-        fungsi = listCommand.pop(0)
-        if (fungsi=='translate'):
-            if (is3D):
-                if(len(listCommand)==3 and isAllInt(listCommand)):
-                    x = float(listCommand[0])
-                    y = float(listCommand[1])
-                    z = float(listCommand[2])
-                    pointBuffer = transformasi.translasi(listPoint,x*step,y*step,z*step)
+    if(len(listCommand)>0): #validasi input kosong
+        if(np.isin(listCommand[0],validCommand)):
+            commandValid = True
+            step = float(percent)/100.0
+            fungsi = listCommand.pop(0)
+            if (fungsi=='translate'):
+                if (is3D):
+                    if(len(listCommand)==3 and isAllFloat(listCommand)):
+                        x = float(listCommand[0]) * step
+                        y = float(listCommand[1]) * step
+                        z = float(listCommand[2]) * step
+                        pointBuffer = transformasi.translasi(listPoint,x,y,z)
+                    else:
+                        commandValid = False
+                        print('Wrong argument for translate function')
+                else:
+                    if(len(listCommand)==2 and isAllFloat(listCommand)):
+                        x = float(listCommand[0]) * step
+                        y = float(listCommand[1]) * step
+                        z = 0.0 * step
+                        pointBuffer = transformasi.translasi(listPoint,x,y,z)
+                    else:
+                        commandValid = False
+                        print('Wrong argument for translate function')
+            elif (fungsi=='dilate'):
+                if (len(listCommand)==1):
+                    if (isFloat(listCommand[0])):
+                        k = (float(listCommand[0])-1.0)*step + 1.0
+                        pointBuffer = transformasi.dilatasi(listPoint,k)
+                    else:
+                        commandValid = False
+                        print('Dilate function take float as argument')
                 else:
                     commandValid = False
-                    print('Parameter translate salah')
+                    print('Wrong argument for dilate function')
+            elif (fungsi=='rotate'):
+                if (is3D):
+                    if(len(listCommand)==4 and isAllFloat(listCommand)):
+                        deg = float(listCommand[0]) * step
+                        x = float(listCommand[1])
+                        y = float(listCommand[2])
+                        z = float(listCommand[3])
+                        pointBuffer = transformasi.rotasi(listPoint,deg,x,y,z,is3D)
+                    else:
+                        commandValid = False
+                        print('Wrong argument for rotate function')
+                else:
+                    if(len(listCommand)==3 and isAllFloat(listCommand)):
+                        deg = float(listCommand[0]) * step
+                        x = float(listCommand[1])
+                        y = float(listCommand[2])
+                        z = 0.0
+                        pointBuffer = transformasi.rotasi(listPoint,deg,x,y,z,is3D)
+                    else:
+                        commandValid = False
+                        print('Wrong argument for rotate function')
+            elif (fungsi=='reflect'):
+                if (len(listCommand)==2):
+                    pointBuffer = transformasi.refleksi(listPoint,listCommand[1])
+            elif (fungsi=='shear'):
+                if (len(listCommand)==2):
+                    if (isFloat(listCommand[1])):
+                        if (listCommand[0]=='x' or listCommand[0]=='y' or listCommand[0]=='z'):
+                            k = (float(listCommand[1])-1.0)*step + 1.0
+                            pointBuffer = transformasi.shear(listPoint,listCommand[0],k)
+                        else:
+                            commandValid = False
+                            print('Shear function need x, y or z axis as first argument')
+                    else:
+                        commandValid = False
+                        print('Shear function take float as second argument')
+                else:
+                    commandValid = False
+                    print('Wrong argument for shear function')
+            elif (fungsi=='stretch'):
+                if (len(listCommand)==2):
+                    if (isFloat(listCommand[1])):
+                        if (listCommand[0]=='x' or listCommand[0]=='y' or listCommand[0]=='z'):
+                            k = (float(listCommand[1])-1.0)*step + 1.0
+                            pointBuffer = transformasi.stretch(listPoint,listCommand[0],k)
+                        else:
+                            commandValid = False
+                            print('Stretch function need x, y or z axis as first argument')
+                    else:
+                        commandValid = False
+                        print('Stretch function take float as second argument')
+                else:
+                    commandValid = False
+                    print('Wrong argument for stretch function')
+            elif (fungsi=='custom'):
+                arrCustom = []
+                if (is3D):
+                    if(len(listCommand)==9 and isAllFloat(listCommand)):
+                        #custom 3D
+                        arrCustom.append(float(listCommand[0])*step)
+                        arrCustom.append(float(listCommand[1])*step)
+                        arrCustom.append(float(listCommand[2])*step)
+                        arrCustom.append(float(listCommand[3])*step)
+                        arrCustom.append(float(listCommand[4])*step)
+                        arrCustom.append(float(listCommand[5])*step)
+                        arrCustom.append(float(listCommand[6])*step)
+                        arrCustom.append(float(listCommand[7])*step)
+                        arrCustom.append(float(listCommand[8])*step)
+                        pointBuffer = transformasi.custom(listPoint,arrCustom)
+                    else:
+                        commandValid = False
+                        print('Wrong argument for custom function')
+                else:
+                    if(len(listCommand)==4 and isAllFloat(listCommand)):
+                        #custom 2D
+                        arrCustom.append(float(listCommand[0])*step)
+                        arrCustom.append(float(listCommand[1])*step)
+                        arrCustom.append(float(listCommand[2])*step)
+                        arrCustom.append(float(listCommand[3])*step)
+                        pointBuffer = transformasi.custom(listPoint,arrCustom)
+                    else:
+                        commandValid = False
+                        print('Wrong argument for custom function')
+            elif(fungsi =='help'):
+                if (len(listCommand)==0):
+                    printHelp()
+                elif (len(listCommand)==1):
+                    if(listCommand[0]=='translate'):
+                        printHelpTranslate()
+                    elif(listCommand[0]=='dilate'):
+                        printHelpDilate()
+                    elif(listCommand[0]=='rotate'):
+                        printHelpRotate()
+                    elif(listCommand[0]=='reflect'):
+                        printHelpReflect()
+                    elif(listCommand[0]=='shear'):
+                        printHelpShear()
+                    elif(listCommand[0]=='stretch'):
+                        printHelpStretch()
+                    elif(listCommand[0]=='custom'):
+                        printHelpCustom()
+                    elif(listCommand[0]=='multiple'):
+                        printHelpMultiple()
+                    elif(listCommand[0]=='reset'):
+                        print('reset -- reset object(s) to its original form')
+                    elif(listCommand[0]=='exit'):
+                        print('exit -- to exit from the program')
+                    else:
+                        print("Undefined command: '"+str(listCommand[0])+"'.  Try 'help'")
+                else:
+                    print('Wrong way to call help')
+                commandValid= False
+        else:
+            if (np.isin(listCommand[0],mainCommand)):
+                print("'"+str(listCommand[0])+"' function doesn't have any parameter" )
             else:
-                if(len(listCommand)==2 and isAllInt(listCommand)):
-                    listCommand.append(0)
-                    x = float(listCommand[0])
-                    y = float(listCommand[1])
-                    z = float(listCommand[2])
-                    pointBuffer = transformasi.translasi(listPoint,x*step,y*step,z*step)
-                else:
-                    commandValid = False
-                    print('Parameter translate salah')
-        elif (listCommand[0]=='dilate'):
-            if (len(listCommand)==2):
-                k = float(listCommand[2])
-                kAnim = (k-1.0)*step
-                kAnim += 1.0
-                pointBuffer = transformasi.dilatasi(listPoint,kAnim)
-        elif (listCommand[0]=='rotate'):
-            if (len(listCommand)-1 ==3):
-                listCommand.append(0)
-            if (len(listCommand)==5):
-                x = float(listCommand[2])
-                y = float(listCommand[3])
-                z = float(listCommand[4])
-                pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1])*step,x,y,z,is3D)
-        elif (listCommand[0]=='reflect'):
-            if (len(listCommand)==2):
-                pointBuffer = transformasi.refleksi(listPoint,listCommand[1])
-        elif (listCommand[0]=='shear'):
-            if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
-                k = float(listCommand[2])
-                kAnim = (k-1.0)*step
-                kAnim += 1.0
-                pointBuffer = transformasi.shear(listPoint,listCommand[1],kAnim)
-        elif (listCommand[0]=='stretch'):
-            if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
-                k = float(listCommand[2])
-                kAnim = (k-1.0)/step
-                kAnim += 1.0
-                pointBuffer = transformasi.stretch(listPoint,listCommand[1],kAnim)
-        elif (listCommand[0]=='custom'):
-            arrCustom = []
-            if (len(listCommand)-1 == 4):
-                #custom 2D
-                arrCustom.append(float(listCommand[1])/step)
-                arrCustom.append(float(listCommand[2])/step)
-                arrCustom.append(float(listCommand[3])/step)
-                arrCustom.append(float(listCommand[4])/step)
-            elif(len(listCommand)-1 == 9):
-                #custom 3D
-                arrCustom.append(float(listCommand[1])/step)
-                arrCustom.append(float(listCommand[2])/step)
-                arrCustom.append(float(listCommand[3])/step)
-                arrCustom.append(float(listCommand[4])/step)
-                arrCustom.append(float(listCommand[5])/step)
-                arrCustom.append(float(listCommand[6])/step)
-                arrCustom.append(float(listCommand[7])/step)
-                arrCustom.append(float(listCommand[8])/step)
-                arrCustom.append(float(listCommand[9])/step)
-            if (len(arrCustom)==9):
-                pointBuffer = transformasi.custom(listPoint,arrCustom)
-    else:
-        print('There is no \''+str(listCommand[0])+'\' function')
+                print("There is no function called '"+str(listCommand[0])+"'. Try 'help'")
     return commandValid
     
 
@@ -209,12 +286,91 @@ def isInt(param):
     except:
         return False
 
-def isAllInt(param):
+def isFloat(param):
+    try:
+        x = float(param)
+        return True
+    except:
+        return False
+
+def isAllFloat(param):
     i = 0
-    Int = True
-    while (i<len(param) and Int):
-        if(not(isInt(param[i]))):
-            Int = False
+    Float = True
+    while (i<len(param) and Float):
+        if(not(isFloat(param[i]))):
+            Float = False
         else:
             i += 1
-    return Int
+    return Float
+
+def printHelp():
+    print('List of available function\n')
+    print('translate -- to translate object(s) by moving all its point')
+    print('dilate -- to dilate object(s) by a factor')
+    print('rotate -- to rotate object(s) counter-clockwise')
+    print('reflect -- to reflect object(s) to a surface or point')
+    print('shear -- shear object(s) to one of the axis')
+    print('stretch -- stretch object(s) to one of the axis')
+    print('custom -- apply a linear transformation to object(s) with custom matrix')
+    print('multiple -- apply functions to object(s) several times')
+    print('reset -- reset object(s) to its original form')
+    print('exit -- to exit from the program\n')
+    print('Type "help" followed by function name for full documentation')
+
+def printHelpTranslate():
+    print('for 2D: translate <dx> <dy>')
+    print('<dx> and <dy> is a parameter for translate function in 2D')
+    print('value x will be translated by <dx> and value y by <dy>\n')
+    print('for 3D: translate <dx> <dy> <dz>')
+    print('for 3D object(s), added one more parameter to translate z by <dz>')
+    print('<dx> <dy> <dz> is a floating number')
+
+def printHelpDilate():
+    print('dilate <k>')
+    print('dilate the object(s) by <k> factor in all its axis')
+    print('<k> is a floating number')
+
+def printHelpRotate():
+    print('for 2D: rotate <deg> <a> <b>')
+    print('<a> and <b> is the center of rotation in 2D')
+    print('object(s) will be rotate by <deg> degree counter-clockwise with <a>,<b> as its center\n')
+    print('for 3D: rotate <deg> <u> <v> <w>')
+    print('for object(s) in 3D, the object(s) will be rotated <deg> degree counter-clockwise')
+    print('with vector(<u>,<v>,<w>) as its center')
+    print('<deg> <a> <b> <u> <v> <w> is a floating number')
+
+def printHelpReflect():
+    print('reflect <param>')
+    print('the value <param> can be one of these expresion:')
+    print('x, y, y=x, y=-x or point (a,b)')
+    print('it will reflect the object(s) with <param> as its mirror')
+
+def printHelpShear():
+    print('shear <param> <k>')
+    print("for 2D, <param> can be either 'x' or 'y'")
+    print("in 3D, <param> value is the same as in 2D but added 'z' value as it's third axis")
+    print('it will shear the object(s) in <param> direction by <k> factor')
+    print('<k> is a floating number')
+
+def printHelpStretch():
+    print('stretch <param> <k>')
+    print("for 2D, <param> can be either 'x' or 'y'")
+    print("in 3D, <param> value is the same as in 2D but added 'z' value as it's third axis")
+    print('it will stretch the object(s) in <param> direction by <k> factor')
+    print('<k> is a floating number')
+
+def printHelpCustom():
+    print('for 2D: custom <a> <b> <c> <d>')
+    print('for 3D: custom <a> <b> <c> <d> <e> <f> <g> <h> <i>')
+    print('apply a linear transformation to object(s) with custom matrix as below')
+    print('2D: | a b |    3D: | a b c |')
+    print('    | c d |        | d e f |')
+    print('                   | g h i |')
+    print('<a> <b> <c> <d> <e> <f> <g> <h> <i> is a floating number')
+
+def printHelpMultiple():
+    print('multiple <n>')
+    print('apply functions to object(s) <n> times')
+    print('the input function can be any function listed except')
+    print("'multiple','reset','exit'")
+    print('<n> is a integer')
