@@ -25,6 +25,7 @@ scaleNow = 101
 saveComm = ""
 savePoints =[]
 
+basicShape = []
 listPoints =[np.array([[-50,-50,0],[50,-50,0],[50,50,0],[-50,50,0]])]
 
 def getCube():
@@ -76,6 +77,7 @@ def keyboardFunc(key,x,y):
 
 def doInput():
     global listPoints
+    global basicShape
     global scaleNow
     global saveComm
     global savePoints
@@ -87,18 +89,22 @@ def doInput():
         if (command=='exit'):
             glutLeaveMainLoop() #exit
         elif (command=='insert'):
+            basicShape[0] = termInput.pointBuffer
             listPoints[0] = termInput.pointBuffer
             glutPostRedisplay()
         elif (command=='add'):
+            basicShape.append(termInput.pointBuffer)
             listPoints.append(termInput.pointBuffer)
             glutPostRedisplay()
         elif (command=='reset'):
-            print("reset")
+            listPoints = basicShape
+            glutPostRedisplay()
         elif (command=='set3Dview'):
             render.is3D = True
         elif (command=='3D'):
             render.is3D = True
             termInput.is3D = True
+            basicShape = getCube()
             listPoints = getCube()
             glutPostRedisplay()
         else:
@@ -116,6 +122,7 @@ def doInput():
             for i,poly in enumerate(savePoints):
                 termInput.parsingCommand(saveComm,poly,scaleNow)
                 listPoints[i] = termInput.pointBuffer
+            # print(listPoints)
             glutPostRedisplay()
             scaleNow +=1
             if(scaleNow==step+1):
