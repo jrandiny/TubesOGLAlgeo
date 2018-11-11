@@ -126,19 +126,31 @@ def parsingCommand(command,listPoint,percent):
     if(np.isin(listCommand[0],validCommand)):
         commandValid = True
         step = float(percent)/100.0
-        # if (len(listCommand)==4):
-        if (listCommand[0]=='translate'):
-            if (len(listCommand)-1 ==2):
-                listCommand.append(0)
-            if (len(listCommand)==4):
-                x = float(listCommand[1])
-                y = float(listCommand[2])
-                z = float(listCommand[3])
-                pointBuffer = transformasi.translasi(listPoint,x/step,y/step,z/step)
+        fungsi = listCommand.pop(0)
+        if (fungsi=='translate'):
+            if (is3D):
+                if(len(listCommand)==3 and isAllInt(listCommand)):
+                    x = float(listCommand[0])
+                    y = float(listCommand[1])
+                    z = float(listCommand[2])
+                    pointBuffer = transformasi.translasi(listPoint,x*step,y*step,z*step)
+                else:
+                    commandValid = False
+                    print('Parameter translate salah')
+            else:
+                if(len(listCommand)==2 and isAllInt(listCommand)):
+                    listCommand.append(0)
+                    x = float(listCommand[0])
+                    y = float(listCommand[1])
+                    z = float(listCommand[2])
+                    pointBuffer = transformasi.translasi(listPoint,x*step,y*step,z*step)
+                else:
+                    commandValid = False
+                    print('Parameter translate salah')
         elif (listCommand[0]=='dilate'):
             if (len(listCommand)==2):
                 k = float(listCommand[2])
-                kAnim = (k-1.0)/step
+                kAnim = (k-1.0)*step
                 kAnim += 1.0
                 pointBuffer = transformasi.dilatasi(listPoint,kAnim)
         elif (listCommand[0]=='rotate'):
@@ -148,14 +160,14 @@ def parsingCommand(command,listPoint,percent):
                 x = float(listCommand[2])
                 y = float(listCommand[3])
                 z = float(listCommand[4])
-                pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1])/step,x,y,z,is3D)
+                pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1])*step,x,y,z,is3D)
         elif (listCommand[0]=='reflect'):
             if (len(listCommand)==2):
                 pointBuffer = transformasi.refleksi(listPoint,listCommand[1])
         elif (listCommand[0]=='shear'):
             if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
                 k = float(listCommand[2])
-                kAnim = (k-1.0)/step
+                kAnim = (k-1.0)*step
                 kAnim += 1.0
                 pointBuffer = transformasi.shear(listPoint,listCommand[1],kAnim)
         elif (listCommand[0]=='stretch'):
@@ -186,7 +198,7 @@ def parsingCommand(command,listPoint,percent):
             if (len(arrCustom)==9):
                 pointBuffer = transformasi.custom(listPoint,arrCustom)
     else:
-        print('There is no \''+str(command)+'\' function')
+        print('There is no \''+str(listCommand[0])+'\' function')
     return commandValid
     
 
