@@ -97,7 +97,7 @@ def doInput():
             listPoints.append(termInput.pointBuffer)
             glutPostRedisplay()
         elif (command=='reset'):
-            listPoints = basicShape
+            listPoints = basicShape.copy()
             glutPostRedisplay()
         elif (command=='set3Dview'):
             render.is3D = True
