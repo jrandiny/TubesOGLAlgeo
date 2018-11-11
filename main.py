@@ -100,10 +100,11 @@ def doInput():
             listPoints = getCube()
             glutPostRedisplay()
         else:
-            scaleNow = 1
-            savePoints = listPoints.copy()
-            saveComm = command
-            waitTask = True
+            if(termInput.parsingCommand(command,np.array([[0,0,0]]),1)):
+                scaleNow = 1
+                savePoints = listPoints.copy()
+                saveComm = command
+                waitTask = True
         
         if(not waitTask):
             taskQueue.task_done()     

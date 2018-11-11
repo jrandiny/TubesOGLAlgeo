@@ -8,10 +8,12 @@ bacaPoint = False
 pointBuffer = np.zeros((1,2))
 is3D = False
 
+validCommand = np.array(['translate','rotate','dilate','shear','stretch','custom','reflect'])
+
 def worker(workQueue):
     global is3D
     while(True):
-        time.sleep(0.1)
+        time.sleep(0.1) # Agar tidak lemot saat queue not empty
         if(workQueue.empty()):
             if(bacaPoint): #sudah membaca input point
                 command = input("$ ") #input command
@@ -37,6 +39,7 @@ def worker(workQueue):
                 inputPoint()
                 command = "insert"
             workQueue.put(command,False)
+
             if (is3D):
                 command = 'set3Dview'
                 workQueue.put(command,False)
@@ -80,70 +83,76 @@ def inputPoint():
 def parsingCommand(command,listPoint,percent):
     global pointBuffer
     global is3D
+
     pointBuffer = listPoint
     step = 100.0/float(percent)
     listCommand = command.split(' ')
-    try:
-        if (listCommand[0]=="translate"):
-            if (len(listCommand)-1 ==2):
-                listCommand.append(0)
-            if (len(listCommand)==4):
-                x = float(listCommand[1])
-                y = float(listCommand[2])
-                z = float(listCommand[3])
-                pointBuffer = transformasi.translasi(listPoint,x/step,y/step,z/step)
-        elif (listCommand[0]=='dilate'):
-            if (len(listCommand)==2):
-                k = float(listCommand[2])
-                kAnim = (k-1.0)/step
-                kAnim += 1.0
-                pointBuffer = transformasi.dilatasi(listPoint,kAnim)
-        elif (listCommand[0]=='rotate'):
-            if (len(listCommand)-1 ==3):
-                listCommand.append(0)
-            if (len(listCommand)==5):
-                x = float(listCommand[2])
-                y = float(listCommand[3])
-                z = float(listCommand[4])
-                pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1])/step,x,y,z,is3D)
-        elif (listCommand[0]=='reflect'):
-            if (len(listCommand)==2):
-                pointBuffer = transformasi.refleksi(listPoint,listCommand[1])
-        elif (listCommand[0]=='shear'):
-            if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
-                k = float(listCommand[2])
-                kAnim = (k-1.0)/step
-                kAnim += 1.0
-                pointBuffer = transformasi.shear(listPoint,listCommand[1],kAnim)
-        elif (listCommand[0]=='stretch'):
-            if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
-                k = float(listCommand[2])
-                kAnim = (k-1.0)/step
-                kAnim += 1.0
-                pointBuffer = transformasi.stretch(listPoint,listCommand[1],kAnim)
-        elif (listCommand[0]=='custom'):
-            arrCustom = []
-            if (len(listCommand)-1 == 4):
-                #custom 2D
-                arrCustom.append(float(listCommand[1])/step)
-                arrCustom.append(float(listCommand[2])/step)
-                arrCustom.append(float(listCommand[3])/step)
-                arrCustom.append(float(listCommand[4])/step)
-            elif(len(listCommand)-1 == 9):
-                #custom 3D
-                arrCustom.append(float(listCommand[1])/step)
-                arrCustom.append(float(listCommand[2])/step)
-                arrCustom.append(float(listCommand[3])/step)
-                arrCustom.append(float(listCommand[4])/step)
-                arrCustom.append(float(listCommand[5])/step)
-                arrCustom.append(float(listCommand[6])/step)
-                arrCustom.append(float(listCommand[7])/step)
-                arrCustom.append(float(listCommand[8])/step)
-                arrCustom.append(float(listCommand[9])/step)
-            if (len(arrCustom)==9):
-                pointBuffer = transformasi.custom(listPoint,arrCustom)
-    except:
-        print('command not recognized')
+    commandValid = False
+    if(np.isin(listCommand[0],validCommand)):
+        commandValid = True
+        try:
+            if (listCommand[0]=='translate'):
+                if (len(listCommand)-1 ==2):
+                    listCommand.append(0)
+                if (len(listCommand)==4):
+                    x = float(listCommand[1])
+                    y = float(listCommand[2])
+                    z = float(listCommand[3])
+                    pointBuffer = transformasi.translasi(listPoint,x/step,y/step,z/step)
+            elif (listCommand[0]=='dilate'):
+                if (len(listCommand)==2):
+                    k = float(listCommand[2])
+                    kAnim = (k-1.0)/step
+                    kAnim += 1.0
+                    pointBuffer = transformasi.dilatasi(listPoint,kAnim)
+            elif (listCommand[0]=='rotate'):
+                if (len(listCommand)-1 ==3):
+                    listCommand.append(0)
+                if (len(listCommand)==5):
+                    x = float(listCommand[2])
+                    y = float(listCommand[3])
+                    z = float(listCommand[4])
+                    pointBuffer = transformasi.rotasi(listPoint,float(listCommand[1])/step,x,y,z,is3D)
+            elif (listCommand[0]=='reflect'):
+                if (len(listCommand)==2):
+                    pointBuffer = transformasi.refleksi(listPoint,listCommand[1])
+            elif (listCommand[0]=='shear'):
+                if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
+                    k = float(listCommand[2])
+                    kAnim = (k-1.0)/step
+                    kAnim += 1.0
+                    pointBuffer = transformasi.shear(listPoint,listCommand[1],kAnim)
+            elif (listCommand[0]=='stretch'):
+                if (len(listCommand)==3 and (listCommand[1]=='x' or listCommand[1]=='y' or listCommand[1]=='z')):
+                    k = float(listCommand[2])
+                    kAnim = (k-1.0)/step
+                    kAnim += 1.0
+                    pointBuffer = transformasi.stretch(listPoint,listCommand[1],kAnim)
+            elif (listCommand[0]=='custom'):
+                arrCustom = []
+                if (len(listCommand)-1 == 4):
+                    #custom 2D
+                    arrCustom.append(float(listCommand[1])/step)
+                    arrCustom.append(float(listCommand[2])/step)
+                    arrCustom.append(float(listCommand[3])/step)
+                    arrCustom.append(float(listCommand[4])/step)
+                elif(len(listCommand)-1 == 9):
+                    #custom 3D
+                    arrCustom.append(float(listCommand[1])/step)
+                    arrCustom.append(float(listCommand[2])/step)
+                    arrCustom.append(float(listCommand[3])/step)
+                    arrCustom.append(float(listCommand[4])/step)
+                    arrCustom.append(float(listCommand[5])/step)
+                    arrCustom.append(float(listCommand[6])/step)
+                    arrCustom.append(float(listCommand[7])/step)
+                    arrCustom.append(float(listCommand[8])/step)
+                    arrCustom.append(float(listCommand[9])/step)
+                if (len(arrCustom)==9):
+                    pointBuffer = transformasi.custom(listPoint,arrCustom)
+        except:
+            print('command not recognized')
+
+    return commandValid
     
 
 def isInt(param):
