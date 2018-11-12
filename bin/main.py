@@ -25,7 +25,7 @@ scaleNow = 101
 saveComm = ""
 savePoints =[]
 
-basicShape = []
+basicShape = [[]]
 listPoints =[np.array([[-50,-50,0],[50,-50,0],[50,50,0],[-50,50,0]])]
 
 def getCube():
