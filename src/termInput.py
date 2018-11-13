@@ -187,7 +187,7 @@ def parsingCommand(command,listPoint,percent):
                 if (len(listCommand)==2):
                     if (isFloat(listCommand[1])):
                         if (listCommand[0]=='x' or listCommand[0]=='y' or listCommand[0]=='z'):
-                            k = (float(listCommand[1])-1.0)*step
+                            k = (float(listCommand[1]))*step
                             pointBuffer = transformasi.shear(listPoint,listCommand[0],k)
                         else:
                             commandValid = False
