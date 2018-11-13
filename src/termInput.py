@@ -168,7 +168,11 @@ def parsingCommand(command,listPoint,percent):
                         x = float(listCommand[1])
                         y = float(listCommand[2])
                         z = float(listCommand[3])
-                        pointBuffer = transformasi.rotasi(listPoint,deg,x,y,z,is3D)
+                        if (x!=0.0 or  y!=0.0 or  z!=0.0):
+                            pointBuffer = transformasi.rotasi(listPoint,deg,x,y,z,is3D)
+                        else:
+                            commandValid = False
+                            print('Rotation center cannot be vector zero')
                     else:
                         commandValid = False
                         print('Wrong argument for rotate function')
