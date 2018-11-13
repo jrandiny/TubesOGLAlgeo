@@ -10,6 +10,8 @@ is3D = False
 
 validCommand = np.array(['translate','rotate','dilate','shear','stretch','custom','reflect','multiple','help'])
 mainCommand = np.array(['exit','add','reset','insert','3D'])
+param2Dvalid = np.array(['x', 'y', 'y=x', 'y=-x'])
+param3Dvalid = np.array(['x', 'y', 'z', 'xy', 'xz', 'yz', 'y=x', 'y=-x', 'y=z', 'y=-z', 'x=z', 'x=-z'])
 
 def worker(workQueue):
     global is3D
@@ -181,8 +183,19 @@ def parsingCommand(command,listPoint,percent):
                         commandValid = False
                         print('Wrong argument for rotate function')
             elif (fungsi=='reflect'):
-                if (len(listCommand)==1):
-                    pointBuffer = transformasi.refleksi(listPoint,listCommand[0],is3D,step)
+                listCommand = ''.join(listCommand)
+                if (is3D):
+                    if (np.isin(listCommand,param3Dvalid) or isPoint(listCommand)==3):
+                        pointBuffer = transformasi.refleksi(listPoint,listCommand,is3D,step)
+                    else:
+                        commandValid = False
+                        print('Wrong parameter for 3D reflect')
+                else:
+                    if (np.isin(listCommand,param2Dvalid) or isPoint(listCommand)==2):
+                        pointBuffer = transformasi.refleksi(listPoint,listCommand,is3D,step)
+                    else:
+                        commandValid = False
+                        print('Wrong parameter for 2D reflect')
             elif (fungsi=='shear'):
                 if (len(listCommand)==2):
                     if (isFloat(listCommand[1])):
@@ -303,6 +316,20 @@ def isAllFloat(param):
             i += 1
     return Float
 
+def isPoint(param):
+    try:
+        if (param[0]=='(' and param[len(param)-1]==')'):
+            param = param.replace(',',' ')
+            param = param.replace('(','')
+            param = param.replace(')','')
+            param = param.split()
+            if (isAllFloat(param)):
+                return len(param)
+        else:
+            return 0
+    except:
+        return 0
+
 def printHelp():
     print('List of available function\n')
     print('translate -- to translate object(s) by moving all its point')
@@ -336,13 +363,15 @@ def printHelpRotate():
     print('object(s) will be rotate by <deg> degree counter-clockwise with <a>,<b> as its center\n')
     print('for 3D: rotate <deg> <u> <v> <w>')
     print('for object(s) in 3D, the object(s) will be rotated <deg> degree counter-clockwise')
-    print('with vector(<u>,<v>,<w>) as its center')
+    print('with vector(<u>,<v>,<w>) as its center, it cannot be a zero vector')
     print('<deg> <a> <b> <u> <v> <w> is a floating number')
 
 def printHelpReflect():
     print('reflect <param>')
-    print('the value <param> can be one of these expresion:')
-    print('x, y, y=x, y=-x or point (a,b)')
+    print('the value <param> for 2D can be one of these expresion:')
+    print('x, y, y=x, y=-x or (a,b) with a,b is a point in 2D plane')
+    print('as for the 3D, the value <param> can be one of these expresion:')
+    print('x, y, z, xy, xz, yz, y=x, y=-x, y=z, y=-z, x=z, x=-z or (a,b,c) with a,b,c is a point in 3D plane')
     print('it will reflect the object(s) with <param> as its mirror')
 
 def printHelpShear():
