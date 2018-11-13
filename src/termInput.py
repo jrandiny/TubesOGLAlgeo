@@ -29,9 +29,28 @@ def worker(workQueue):
                         if (isInt(listCommand[1])):
                             multiCommand = []
                             for i in range (1,int(listCommand[1])+1):
-                                multiCommand.append(input("   "))
+                                print('   '+str(i)+'. ',end='')
+                                masukan = input()
+                                parsed = masukan.split()
+                                if (len(parsed)>0):
+                                    if(parsed[0]=='multiple'):
+                                        masukan='multiple'
+                                while (masukan == 'reset' or masukan == 'exit' or masukan=='multiple'): #validasi function dalam multiple
+                                    if (len(parsed)>0):
+                                        if(parsed[0]=='multiple'):
+                                            masukan='multiple'
+                                    if (masukan == 'reset' or masukan == 'exit' or masukan=='multiple'):
+                                        print('ERROR! Cannot input function '+masukan+' in multiple')
+                                    print('   '+str(i)+'. ',end='')
+                                    masukan = input()
+                                    parsed = masukan.split()
+                                multiCommand.append(masukan)
                             for mcom in multiCommand:
                                 workQueue.put(mcom,False)
+                        else:
+                            print('Multiple function take float as argument')
+                    else:
+                        print('Wrong argument for multiple function')
 
                 elif (listCommand[0]=='add'): #apakah commandnya add
                     if (len(listCommand)==1): #validasi parameter add
@@ -216,7 +235,7 @@ def parsingCommand(command,listPoint,percent):
                             else:
                                 commandValid = False
                                 print('Shear function need x or y axis as first argument')
-                        else:
+                    else:
                         commandValid = False
                         print('Shear function take float as second argument')
                 else:
@@ -225,12 +244,19 @@ def parsingCommand(command,listPoint,percent):
             elif (fungsi=='stretch'):
                 if (len(listCommand)==2):
                     if (isFloat(listCommand[1])):
-                        if (listCommand[0]=='x' or listCommand[0]=='y' or listCommand[0]=='z'):
-                            k = (float(listCommand[1])-1.0)*step + 1.0
-                            pointBuffer = transformasi.stretch(listPoint,listCommand[0],k)
+                        k = (float(listCommand[1])-1.0)*step + 1.0
+                        if (is3D):
+                            if (listCommand[0]=='x' or listCommand[0]=='y' or listCommand[0]=='z'):
+                                pointBuffer = transformasi.stretch(listPoint,listCommand[0],k)
+                            else:
+                                commandValid = False
+                                print('Stretch function need x, y or z axis as first argument')
                         else:
-                            commandValid = False
-                            print('Stretch function need x, y or z axis as first argument')
+                            if (listCommand[0]=='x' or listCommand[0]=='y'):
+                                pointBuffer = transformasi.stretch(listPoint,listCommand[0],k)
+                            else:
+                                commandValid = False
+                                print('Stretch function need x or y axis as first argument')
                     else:
                         commandValid = False
                         print('Stretch function take float as second argument')
