@@ -1,6 +1,45 @@
 import numpy as np
 import math
 
+def parserLocate(x):
+    i=0
+    idxkb=idxkoma1=idxkoma2=idxkt=-1
+    jumlah=0
+    while(i<len(x)):
+        if(x[i]=='('):
+            idxkb=i
+        elif(x[i]==')'):
+            idxkt=i
+        elif(x[i]==',' and jumlah == 0):
+            idxkoma1=i
+            jumlah+=1
+        elif(x[i]==',' and jumlah == 1):
+            idxkoma2=i
+        i+=1
+    result=[idxkb]
+    result.append(idxkoma1)
+    result.append(idxkoma2)
+    result.append(idxkt)
+    return result
+
+def toNumber(x):
+    a=b=c=0
+    result=parserLocate(x)
+    idxkb=result[0]
+    idxkoma1=result[1]
+    idxkoma2=result[2]
+    idxkt=result[3]
+    a=int(x[idxkb+1:idxkoma1])
+    if(idxkoma2==-1):
+        b=int(x[idxkoma1+1:idxkt])
+    else:
+        b=int(x[idxkoma1+1:idxkoma2])
+        c=int(x[idxkoma2+1:idxkt])
+    result=[a]
+    result.append(b)
+    result.append(c)
+    return result
+
 def toRadian(x):
     return x*math.pi/180
 
@@ -39,28 +78,79 @@ def dilatasi(points,k):
     return transformasi(points,pengali,penambah)
         
 
-def refleksi(points,param):
+def refleksi(points,param,is3D,step):
     penambah=np.zeros(3)    
-    if (param=="x"):
-        pengali=np.array([[1,0,0]])
-        pengali=np.append(pengali,[[0,-1,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,1]],axis=0)
-    elif (param=="y"):
-        pengali=np.array([[-1,0,0]])
-        pengali=np.append(pengali,[[0,1,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,1]],axis=0)
-    elif (param=="y=x"):
-        pengali=np.array([[0,1,0]])
-        pengali=np.append(pengali,[[1,0,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,1]],axis=0)
-    elif (param=="y=-x"):
-        pengali=np.array([[0,-1,0]])
-        pengali=np.append(pengali,[[-1,0,0]],axis=0)
-        pengali=np.append(pengali,[[0,0,1]],axis=0)
+    k = -2.0*step + 1.0
+    if (is3D):
+        if (param=="xz"):
+            return stretch(points,'y',k)
+        elif (param=="yz"):
+            return stretch(points,'x',k)
+        elif (param=="xy"):
+            return stretch(points,'z',k)
+        elif (param=="x"):
+            points=stretch(points,'z',k)
+            return stretch(points,'y',k)
+        elif (param=="y"):
+            points=stretch(points,'z',k)
+            return stretch(points,'x',k)
+        elif (param=="z"):
+            points=stretch(points,'x',k)
+            return stretch(points,'y',k)
+        elif (param=="y=x"):
+            points=rotasi(points,45,0,0,1,True)
+            points=refleksi(points,'y',True,step)
+            return rotasi(points,-45,0,0,1,True)
+        elif (param=="y=-x"):
+            points=rotasi(points,-45,0,0,1,True)
+            points=refleksi(points,'y',True,step)
+            return rotasi(points,45,0,0,1,True)
+        elif (param=="y=z"):
+            points=rotasi(points,-45,1,0,0,True)
+            points=refleksi(points,'y',True,step)
+            return rotasi(points,45,1,0,0,True)
+        elif (param=="y=-z"):
+            points=rotasi(points,45,1,0,0,True)
+            points=refleksi(points,'y',True,step)
+            return rotasi(points,-45,1,0,0,True)
+        elif (param=="x=z"):
+            points=rotasi(points,45,0,1,0,True)
+            points=refleksi(points,'x',True,step)
+            return rotasi(points,-45,0,1,0,True)
+        elif (param=="x=-z"):
+            points=rotasi(points,-45,0,1,0,True)
+            points=refleksi(points,'x',True,step)
+            return rotasi(points,45,0,1,0,True)
+        else:
+            result=toNumber(param)
+            a=result[0]
+            b=result[1]
+            c=result[2]
+            points=translasi(points,-1*a,-1*b,-1*c)
+            points=dilatasi(points,k)
+            return translasi(points,a,b,c)
     else:
-        return rotasi(points,180,param[0],param[1],param[2],False)        
-    return transformasi(points,pengali,penambah)
-
+        if (param=="x"):
+            return stretch(points,'y',k)
+        elif (param=="y"):
+            return stretch(points,'x',k)
+        elif (param=="y=x"):
+            points=rotasi(points,45,0,0,0,False)
+            points=stretch(points,'x',k)
+            return rotasi(points,-45,0,0,0,False)
+        elif (param=="y=-x"):
+            points=rotasi(points,-45,0,0,0,False)
+            points=stretch(points,'x',k)
+            return rotasi(points,45,0,0,0,False)
+        else:
+            result=toNumber(param)
+            a=result[0]
+            b=result[1]
+            c=result[2]
+            points=translasi(points,-1*a,-1*b,-1*c)
+            points=dilatasi(points,k)
+            return translasi(points,a,b,c)
+            
 def shear(points,sb,param):
     penambah=np.zeros(3)
     if(sb=="x"):
@@ -87,7 +177,7 @@ def stretch(points,sb,param):
         pengali=np.array([[1,0,0]])
         pengali=np.append(pengali,[[0,param,0]],axis=0)  
         pengali=np.append(pengali,[[0,0,1]],axis=0)
-    elif(sb=="y"):
+    elif(sb=="z"):
         pengali=np.array([[1,0,0]])
         pengali=np.append(pengali,[[0,1,0]],axis=0)  
         pengali=np.append(pengali,[[0,0,param]],axis=0)

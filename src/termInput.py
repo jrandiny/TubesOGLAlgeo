@@ -181,8 +181,8 @@ def parsingCommand(command,listPoint,percent):
                         commandValid = False
                         print('Wrong argument for rotate function')
             elif (fungsi=='reflect'):
-                if (len(listCommand)==2):
-                    pointBuffer = transformasi.refleksi(listPoint,listCommand[1])
+                if (len(listCommand)==1):
+                    pointBuffer = transformasi.refleksi(listPoint,listCommand[0],is3D,step)
             elif (fungsi=='shear'):
                 if (len(listCommand)==2):
                     if (isFloat(listCommand[1])):
