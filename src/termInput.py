@@ -203,13 +203,20 @@ def parsingCommand(command,listPoint,percent):
             elif (fungsi=='shear'):
                 if (len(listCommand)==2):
                     if (isFloat(listCommand[1])):
-                        if (listCommand[0]=='x' or listCommand[0]=='y' or listCommand[0]=='z'):
-                            k = (float(listCommand[1]))*step
-                            pointBuffer = transformasi.shear(listPoint,listCommand[0],k)
+                        k = (float(listCommand[1]))*step
+                        if (is3D):
+                            if (listCommand[0]=='x' or listCommand[0]=='y' or listCommand[0]=='z'):
+                                pointBuffer = transformasi.shear(listPoint,listCommand[0],k)
+                            else:
+                                commandValid = False
+                                print('Shear function need x, y or z axis as first argument')
                         else:
-                            commandValid = False
-                            print('Shear function need x, y or z axis as first argument')
-                    else:
+                            if (listCommand[0]=='x' or listCommand[0]=='y'):
+                                pointBuffer = transformasi.shear(listPoint,listCommand[0],k)
+                            else:
+                                commandValid = False
+                                print('Shear function need x or y axis as first argument')
+                        else:
                         commandValid = False
                         print('Shear function take float as second argument')
                 else:
