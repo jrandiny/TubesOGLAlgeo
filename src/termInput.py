@@ -15,35 +15,35 @@ def worker(workQueue):
     global is3D
     global bacaPoint
     while(True):
-        time.sleep(0.1) # Agar tidak lemot saat queue not empty
-        if(workQueue.empty()):
-            if(bacaPoint): #sudah membaca input point
-                command = input("$ ") #input command
-                listCommand = command.split()
-                if (len(listCommand)>0): #validasi input tidak kosong
+        workQueue.join()
 
-                    if (listCommand[0]=='multiple'): #apakah commandnya multiple
-                        if (len(listCommand)==2): #validasi parameter multiple
-                            if (isInt(listCommand[1])):
-                                multiCommand = []
-                                for i in range (1,int(listCommand[1])+1):
-                                    multiCommand.append(input("   "))
-                                for mcom in multiCommand:
-                                    workQueue.put(mcom,False)
+        if(bacaPoint): #sudah membaca input point
+            command = input("$ ") #input command
+            listCommand = command.split()
+            if (len(listCommand)>0): #validasi input tidak kosong
 
-                    elif (listCommand[0]=='add'): #apakah commandnya add
-                        if (len(listCommand)==1): #validasi parameter add
-                            inputPoint()
-                            command = "add"
+                if (listCommand[0]=='multiple'): #apakah commandnya multiple
+                    if (len(listCommand)==2): #validasi parameter multiple
+                        if (isInt(listCommand[1])):
+                            multiCommand = []
+                            for i in range (1,int(listCommand[1])+1):
+                                multiCommand.append(input("   "))
+                            for mcom in multiCommand:
+                                workQueue.put(mcom,False)
 
-            else: #belum meminta input point
-                inputPoint()
-                if (is3D):
-                    command = '3D'
-                    bacaPoint = True
-                else:
-                    command = "insert"
-            workQueue.put(command,False)
+                elif (listCommand[0]=='add'): #apakah commandnya add
+                    if (len(listCommand)==1): #validasi parameter add
+                        inputPoint()
+                        command = "add"
+
+        else: #belum meminta input point
+            inputPoint()
+            if (is3D):
+                command = '3D'
+                bacaPoint = True
+            else:
+                command = "insert"
+        workQueue.put(command,False)
 
 def inputPoint():
     global pointBuffer
