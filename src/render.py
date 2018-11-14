@@ -10,13 +10,13 @@ import random
 import numpy as np
 
 listPoints =[np.zeros([1,2])]
-colorList = np.array([np.array([1.0,1.0,1.0])])
+colorList = np.empty((0,3))
 zoomRatio = 1.0
 aspect = 1.0
 
 is3D = False
 
-translate = [0.0,0.0,-250.0]
+translate = [0.0,0.0,-1200.0]
 rotate = [0.0,0.0,0.0,0.0]
 
 def grid():

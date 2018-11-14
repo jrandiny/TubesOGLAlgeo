@@ -150,7 +150,7 @@ if __name__ =="__main__":
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_DEPTH)
     glutInitWindowSize(1000, 1000)
-    glutCreateWindow("ini layar loh wkwkwkwk!!!")
+    glutCreateWindow("Tubes Algeo")
 
     glEnable(GL_DEPTH_TEST)
 
