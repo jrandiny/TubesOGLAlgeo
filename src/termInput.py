@@ -14,6 +14,8 @@ param2Dvalid = np.array(['x', 'y', 'y=x', 'y=-x'])
 param3Dvalid = np.array(['x', 'y', 'z', 'xy', 'xz', 'yz', 'y=x', 'y=-x', 'y=z', 'y=-z', 'x=z', 'x=-z'])
 
 def worker(workQueue):
+# I.S. : Sistem terinisialisasi dan workQueue terdefinisi
+# F.S. : Dikeluarkan prompt dan jika diinput ditambahkan ke workQueue
     global is3D
     global bacaPoint
     while(True):
@@ -67,6 +69,8 @@ def worker(workQueue):
         workQueue.put(command,False)
 
 def inputPoint():
+# I.S. : bacaPoint dan is3D terdefinisi
+# F.S. : Dibaca N point dari user lalu ditambahkan ke pointBuffer
     global pointBuffer
     global bacaPoint
     global is3D
@@ -139,6 +143,8 @@ def inputPoint():
         bacaPoint = True #sudah meminta input point
 
 def parsingCommand(command,listPoint,percent):
+# I.S. : Menerima input command, listPoint yang mau ditransformasi, dan persentase transformasi
+# F.S. : Ditaruh ke pointBuffer hasil transformasi jika command valid, return True, jika invalid, return False
     global pointBuffer
     global is3D
 
@@ -368,20 +374,24 @@ def isPoint(param):
         return 0
 
 def printHelp():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help general
     print('List of available function\n')
     print('translate -- to translate object(s) by moving all its point')
-    print('dilate -- to dilate object(s) by a factor')
-    print('rotate -- to rotate object(s) counter-clockwise')
-    print('reflect -- to reflect object(s) to a surface or point')
-    print('shear -- shear object(s) to one of the axis')
-    print('stretch -- stretch object(s) to one of the axis')
-    print('custom -- apply a linear transformation to object(s) with custom matrix')
-    print('multiple -- apply functions to object(s) several times')
-    print('reset -- reset object(s) to its original form')
-    print('exit -- to exit from the program\n')
+    print('dilate    -- to dilate object(s) by a factor')
+    print('rotate    -- to rotate object(s) counter-clockwise')
+    print('reflect   -- to reflect object(s) to a surface or point')
+    print('shear     -- shear object(s) to one of the axis')
+    print('stretch   -- stretch object(s) to one of the axis')
+    print('custom    -- apply a linear transformation to object(s) with custom matrix')
+    print('multiple  -- apply functions to object(s) several times')
+    print('reset     -- reset object(s) to its original form')
+    print('exit      -- to exit from the program\n')
     print('Type "help" followed by function name for full documentation')
 
 def printHelpTranslate():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help translate
     print('for 2D: translate <dx> <dy>')
     print('<dx> and <dy> is a parameter for translate function in 2D')
     print('value x will be translated by <dx> and value y by <dy>\n')
@@ -390,11 +400,15 @@ def printHelpTranslate():
     print('<dx> <dy> <dz> is a floating number')
 
 def printHelpDilate():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help dilatasi
     print('dilate <k>')
     print('dilate the object(s) by <k> factor in all its axis')
     print('<k> is a floating number')
 
 def printHelpRotate():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help rotasi
     print('for 2D: rotate <deg> <a> <b>')
     print('<a> and <b> is the center of rotation in 2D')
     print('object(s) will be rotate by <deg> degree counter-clockwise with <a>,<b> as its center\n')
@@ -404,6 +418,8 @@ def printHelpRotate():
     print('<deg> <a> <b> <u> <v> <w> is a floating number')
 
 def printHelpReflect():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help refleksi
     print('reflect <param>')
     print('the value <param> for 2D can be one of these expresion:')
     print('x, y, y=x, y=-x or (a,b) with a,b is a point in 2D plane')
@@ -412,6 +428,8 @@ def printHelpReflect():
     print('it will reflect the object(s) with <param> as its mirror')
 
 def printHelpShear():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help shear
     print('shear <param> <k>')
     print("for 2D, <param> can be either 'x' or 'y'")
     print("in 3D, <param> value is the same as in 2D but added 'z' value as it's third axis")
@@ -419,6 +437,8 @@ def printHelpShear():
     print('<k> is a floating number')
 
 def printHelpStretch():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help stretch
     print('stretch <param> <k>')
     print("for 2D, <param> can be either 'x' or 'y'")
     print("in 3D, <param> value is the same as in 2D but added 'z' value as it's third axis")
@@ -426,6 +446,8 @@ def printHelpStretch():
     print('<k> is a floating number')
 
 def printHelpCustom():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help custom
     print('for 2D: custom <a> <b> <c> <d>')
     print('for 3D: custom <a> <b> <c> <d> <e> <f> <g> <h> <i>')
     print('apply a linear transformation to object(s) with custom matrix as below')
@@ -435,6 +457,8 @@ def printHelpCustom():
     print('<a> <b> <c> <d> <e> <f> <g> <h> <i> is a floating number')
 
 def printHelpMultiple():
+# I.S. : Sistem terinisialisasi
+# F.S. : Tercetak ke console help multiple
     print('multiple <n>')
     print('apply functions to object(s) <n> times')
     print('the input function can be any function listed except')

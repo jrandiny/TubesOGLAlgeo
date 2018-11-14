@@ -20,6 +20,8 @@ translate = [0.0,0.0,-250.0]
 rotate = [0.0,0.0,0.0,0.0]
 
 def grid():
+# I.S. : Layar grafik terinisialisasi
+# F.S. : Tercetak grid 2D atau 3D sesuai variabel global is3D
     glBegin(GL_LINES)
     # x
     glColor3f(1.0,0,0) # red
@@ -39,6 +41,9 @@ def grid():
 
 
 def displayFunc():
+# I.S. : Window grafik terinisialisasi
+# F.S. : Digambar titik-titik dengan mode GL_POLYGON(is3D false) atau GL_QUADS(is3D true)
+#        Warna akan dirandom jika belum terdapat pada variabel global colorList
     global translate
     global rotate
     global colorList
@@ -83,6 +88,8 @@ def displayFunc():
     glutSwapBuffers()
 
 def renderViewport():
+# I.S. : Sistem grafik terinisialisasi
+# F.S. : Viewport diset
     glLoadIdentity()
     gluPerspective(45,aspect,0.1,2000.0)
     # glFrustum(-1.0*zoomRatio*aspect,1.0*zoomRatio*aspect,-1.0*zoomRatio,1.0*zoomRatio,1.0,50.0) 
@@ -90,6 +97,8 @@ def renderViewport():
 
 
 def windowResized(width,height):
+# I.S. : Sistem grafik terinisialisasi, window diresize
+# F.S  : Menetapkan aspect dan menetapkan viewport ulang
     glViewport(0,0,width,height)
     global aspect
     aspect = float(width) / float(height)

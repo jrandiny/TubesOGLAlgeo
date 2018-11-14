@@ -29,6 +29,7 @@ basicShape = [[]]
 listPoints =[np.array([[-50,-50,0],[50,-50,0],[50,50,0],[-50,50,0]])]
 
 def getCube():
+# Mengembalikan array untuk membuat kubus 3D
     return [
                 # depan belakang
                 np.array([[50,50,50],[50,-50,50],[-50,-50,50],[-50,50,50]]),
@@ -43,6 +44,8 @@ def getCube():
 
 
 def keyboardFunc(key,x,y):
+# I.S. : Window grafik berjalan dan diterima input di keyboard
+# F.S. : Dilakukan aksi sesuai input keyboard
     if key==b'Q':
         glutLeaveMainLoop()
     else:
@@ -76,6 +79,8 @@ def keyboardFunc(key,x,y):
         glutPostRedisplay()
 
 def doInput():
+# I.S. : Sistem terinisialisasi, thread input berjalan
+# F.S. : Jika terdapat item di workQueue, memproses item tersebut
     global listPoints
     global basicShape
     global scaleNow
@@ -131,9 +136,12 @@ def doInput():
 
 
 def prepareDisplay():
+# I.S. : render dan listPoints terdefinisi
+# F.s. : listPoints dirender ke layar
     global listPoints
     render.listPoints = listPoints
     render.displayFunc()
+
 
 if __name__ =="__main__":
     # Threading input system

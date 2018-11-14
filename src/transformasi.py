@@ -41,15 +41,18 @@ def toNumber(x):
     return result
 
 def toRadian(x):
+# Mengembalikan nilai radian dari x derajat
     return x*math.pi/180
 
 def translasi(points,dx,dy,dz):
+# Mengembalikan points hasil translasi sesuai parameter dx dy dz
     penambah=np.array([dx,dy,dz])
     pengali=np.identity(3)
     return transformasi(points,pengali,penambah)
 
 
 def rotasi(points,degree,a,b,c,is3D):
+# Mengembalikan points hasil rotasi sebesar derajat di vektor a b c
     sudut=toRadian(degree)
     if not is3D:
         penambah=np.array([-1*a,-1*b,0])
@@ -71,6 +74,7 @@ def rotasi(points,degree,a,b,c,is3D):
         return transformasi(points,pengali,penambah)
         
 def dilatasi(points,k):
+# Mengembalikan points hasil dilatasi sebesar k
     penambah=np.zeros(3)
     pengali=np.array([[k,0,0]])
     pengali=np.append(pengali,[[0,k,0]],axis=0)
@@ -79,6 +83,7 @@ def dilatasi(points,k):
         
 
 def refleksi(points,param,is3D,step):
+# Mengembalikan points hasil refleksi sesuai param
     penambah=np.zeros(3)    
     k = -2.0*step + 1.0
     if (is3D):
@@ -152,6 +157,7 @@ def refleksi(points,param,is3D,step):
             return translasi(points,a,b,c)
             
 def shear(points,sb,param):
+# Mengembalikan points hasil shear sesuai sumbu sb dan param
     penambah=np.zeros(3)
     if(sb=="x"):
         pengali=np.array([[1,param,0]])
@@ -168,6 +174,7 @@ def shear(points,sb,param):
     return transformasi(points,pengali,penambah)
 
 def stretch(points,sb,param):
+# Mengembalikan points hasil stretch sesuai sumbu sb dan param
     penambah=np.zeros(3)
     if(sb=="x"):
         pengali=np.array([[param,0,0]])
@@ -184,6 +191,7 @@ def stretch(points,sb,param):
     return transformasi(points,pengali,penambah)
 
 def custom(points,array):
+# Mengembalikan points hasil transformasi custom sesuai matriks array
     length=len(array)
     penambah=np.zeros(3)
     pengali=np.empty((0,3))
@@ -199,11 +207,8 @@ def custom(points,array):
 
 
 def transformasi(points, pengali, penambah):
+# Mengembalikan points hasil transformasi dengan matriks pengali dan penambah
     temp=np.empty((0,3))
     for point in points:
         temp=np.append(temp,[pengali.dot(np.add(point,penambah))],axis=0)
     return temp
-
-
-
-#point -> array([[x1,y1],[x2,y2],[x3,y3]])
