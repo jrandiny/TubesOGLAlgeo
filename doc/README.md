@@ -4,6 +4,16 @@ Program simulasi transformasi linier 2D dan 3D menggunakan API OpenGL
 
 ## Menjalankan
 
+## Depedency
+
+- FreeGLUT
+
+Untuk Ubuntu
+
+```
+sudo apt install freeglut
+```
+
 ### Source
 
 Untuk menjalankan, dibutuhkan Python 3 dan beberapa *dependency* berikut
