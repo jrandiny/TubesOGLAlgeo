@@ -62,8 +62,13 @@ def worker(workQueue):
         else: #belum meminta input point
             inputPoint()
             if (is3D):
-                command = '3D'
-                bacaPoint = True
+                if (len(pointBuffer)==0):
+                    command = '3D'
+                    bacaPoint = True
+                else:
+                    command = 'insert'
+                    workQueue.put(command,False)
+                    command = 'set3Dview'
             else:
                 command = "insert"
         workQueue.put(command,False)
@@ -92,7 +97,9 @@ def inputPoint():
             Temp = masukan.split()
             if(len(Temp)!=1):
                 masukan = ''
-    else: #inoutnya 2D
+        if (masukan=='no'):
+            pointBuffer=[]
+    else: #inputnya 2D
         masukan = 'yes'
     if(masukan =='yes') :
         N = -1 #tipe integer untuk jumlah point, inisiasi dengan -1
@@ -111,6 +118,7 @@ def inputPoint():
                 print("The input must be integer")
         arrPoint = [] # tipe menyimpan array of point
         print("Make sure your input is clockwise!")
+        print("Use space to separate your input (ex: 10 10)")
         for i in range(1,N+1,1): #iterasi sebanyak N kali
             point = [] # tipe menyimpan tipe data point
             status = False
@@ -336,6 +344,7 @@ def parsingCommand(command,listPoint,percent):
     
 
 def isInt(param):
+# Mengembalikan true jika param integer
     try:
         x = int(param)
         return True
@@ -343,6 +352,7 @@ def isInt(param):
         return False
 
 def isFloat(param):
+# Mengembalikan true jika param float
     try:
         x = float(param)
         return True
@@ -350,6 +360,7 @@ def isFloat(param):
         return False
 
 def isAllFloat(param):
+# Mengembalikan true jika semua param float
     i = 0
     Float = True
     while (i<len(param) and Float):
@@ -360,6 +371,7 @@ def isAllFloat(param):
     return Float
 
 def isPoint(param):
+# Mengembalikan true jika param adalah tipe point
     try:
         if (param[0]=='(' and param[len(param)-1]==')'):
             param = param.replace(',',' ')

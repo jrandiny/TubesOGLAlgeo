@@ -66,14 +66,16 @@ def displayFunc():
         colorList = np.array(tempList)    
 
     if(is3D):
-        glBegin(GL_QUADS)          
+                 
         for i,poly in enumerate(listPoints):
             glColor3f(colorList[i][0],colorList[i][1],colorList[i][2])
             # glColor3f(random.random(), random.random(), random.random()) 
+            glBegin(GL_POLYGON) 
             for point in poly:
                 glVertex3f(point[0],point[1],point[2])
+            glEnd()
 
-        glEnd()
+        
     else:             
         for i,poly in enumerate(listPoints):
             glBegin(GL_POLYGON)  
