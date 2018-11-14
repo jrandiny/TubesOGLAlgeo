@@ -2,6 +2,7 @@ import numpy as np
 import math
 
 def parserLocate(x):
+# Mengembalikan indeks kurung buka, kurung tutup dan tanda koma dari input x
     i=0
     idxkb=idxkoma1=idxkoma2=idxkt=-1
     jumlah=0
@@ -23,6 +24,7 @@ def parserLocate(x):
     return result
 
 def toNumber(x):
+# Mengembalikan angka dari input x
     a=b=c=0
     result=parserLocate(x)
     idxkb=result[0]
@@ -42,7 +44,7 @@ def toNumber(x):
 
 def toRadian(x):
 # Mengembalikan nilai radian dari x derajat
-    return x*math.pi/180
+    return x*math.pi/180.0
 
 def translasi(points,dx,dy,dz):
 # Mengembalikan points hasil translasi sesuai parameter dx dy dz
