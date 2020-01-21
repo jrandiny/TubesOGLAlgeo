@@ -9,9 +9,9 @@ cd src
 python3 main.py
 ```
 
-### Depedency
+### Dependency
 
-System depedency
+System dependency
 - FreeGLUT
 
 ```bash
@@ -19,7 +19,7 @@ System depedency
 sudo apt install freeglut
 ```
 
-Python depedency
+Python dependency
 - PyOpenGL
 - PyOpenGL-accelerate
 
